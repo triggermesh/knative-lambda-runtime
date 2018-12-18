@@ -38,20 +38,22 @@ spec:
     - |
       cd /workspace/${DIRECTORY}
       cat <<EOF > Dockerfile
-      FROM golang
+        FROM golang
         RUN CGO_ENABLED=0 go get github.com/triggermesh/aws-custom-runtime
+        RUN git clone github.com/triggermesh/aws-python-runtime 
 
         FROM python:alpine3.7
 
-        WORKDIR /workspace
+        WORKDIR /opt
 
-        ENV LAMBDA_TASK_ROOT "/workspace"
+        ENV LAMBDA_TASK_ROOT "/opt"
         ENV _HANDLER "${HANDLER}"
 
         COPY --from=0 /go/bin/aws-custom-runtime .
+        COPY --from=0 /go/aws-python-runtime/python-3.7/ .
         COPY . .
 
-        ENTRYPOINT ["/workspace/aws-custom-runtime"]
+        ENTRYPOINT ["/opt/aws-custom-runtime"]
       EOF
   - name: export
     image: gcr.io/kaniko-project/executor@sha256:30ba460a034a8051b3222a32e20cb6049741e58384e3adf8c8987c004e2f2ab9
