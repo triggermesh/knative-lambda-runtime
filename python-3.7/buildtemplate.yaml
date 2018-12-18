@@ -40,7 +40,7 @@ spec:
       cat <<EOF > Dockerfile
         FROM golang
         RUN CGO_ENABLED=0 go get github.com/triggermesh/aws-custom-runtime
-        RUN git clone github.com/triggermesh/aws-python-runtime 
+        RUN git clone https://github.com/triggermesh/aws-python-runtime 
 
         FROM python:alpine3.7
 
