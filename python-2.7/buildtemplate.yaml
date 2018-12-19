@@ -44,8 +44,8 @@ spec:
         RUN apk --no-cache add curl \
           && curl -sL https://github.com/triggermesh/aws-custom-runtime/releases/download/0.0.1/aws-custom-runtime > aws-custom-runtime \
           && chmod +x aws-custom-runtime \
-          && curl -sL https://github.com/triggermesh/aws-python-runtime/archive/0.0.1.tar.gz | tar -xz aws-python-runtime-0.0.1/python-2.7 \
-          && mv aws-python-runtime-0.0.1/python-2.7/* .
+          && curl -sL https://github.com/triggermesh/aws-lambda-runtime/archive/0.0.1.tar.gz | tar -xz aws-lambda-runtime-0.0.1/python-2.7 \
+          && mv aws-lambda-runtime-0.0.1/python-2.7/* .
 
         ENV LAMBDA_TASK_ROOT "/opt"
         ENV _HANDLER "${HANDLER}"

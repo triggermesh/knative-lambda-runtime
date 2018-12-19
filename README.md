@@ -1,11 +1,9 @@
-### AWS Lambda Python buildtemplates
+### AWS Lambda buildtemplates
 
-Knative buildtemplate based on [LambCI](https://github.com/lambci/docker-lambda) Python runtimes. 
+Knative buildtemplate based on [LambCI](https://github.com/lambci/docker-lambda) runtimes. 
 Function deployment example using [tm](https://github.com/triggermesh/tm) CLI:
 
-#### Example
-
-Python 3.7
+#### Python
 
 1. Install buildtemplate
 
