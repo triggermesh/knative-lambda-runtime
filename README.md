@@ -8,7 +8,7 @@ Function deployment example using [tm](https://github.com/triggermesh/tm) CLI:
 1. Install buildtemplate
 
 ```
-tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/aws-python-runtime/master/python-3.7/buildtemplate.yaml
+tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/aws-lambda-runtime/master/python-3.7/buildtemplate.yaml
 ```
 
 2. Deploy [function](https://github.com/serverless/examples/tree/master/aws-python-simple-http-endpoint)
@@ -31,7 +31,7 @@ To use Python 2.7 runtime simply replace version tag in step 1 and 2 with `pytho
 
 ### Support
 
-We would love your feedback on this tool so don't hesitate to let us know what is wrong and how we could improve it, just file an [issue](https://github.com/triggermesh/aws-python-runtime/issues/new)
+We would love your feedback on this tool so don't hesitate to let us know what is wrong and how we could improve it, just file an [issue](https://github.com/triggermesh/aws-lambda-runtime/issues/new)
 
 ### Code of Conduct
 
