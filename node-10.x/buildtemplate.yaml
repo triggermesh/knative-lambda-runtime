@@ -53,7 +53,7 @@ spec:
         ENV _HANDLER "${HANDLER}"
 
         COPY . .
-
+        RUN npm install
         ENTRYPOINT ["/opt/aws-custom-runtime"]
       EOF
   - name: export

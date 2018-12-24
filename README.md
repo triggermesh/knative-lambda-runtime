@@ -21,6 +21,7 @@ tm deploy service python-test -f https://github.com/serverless/examples --build-
 
 ```
 curl python-test.default.dev.triggermesh.io
+
 {"statusCode": 200, "body": "{\"message\": \"Hello, the current time is 06:45:49.174383\"}"}
 ```
 
@@ -28,6 +29,27 @@ curl python-test.default.dev.triggermesh.io
 To use Python 2.7 runtime simply replace version tag in step 1 and 2 with `python-2.7` and `aws-python27-runtime` accordingly.
 
 
+#### Nodejs
+
+1. Install node 4.3 buildtemplate
+
+```
+https://raw.githubusercontent.com/triggermesh/aws-lambda-runtime/master/node-4.x/buildtemplate.yaml
+```
+
+2. Deploy example function
+
+```
+tm deploy service node4-test -f https://github.com/serverless/examples --build-template aws-node4-runtime --build-argument DIRECTORY=aws-node-serve-dynamic-html-via-http-endpoint --build-argument HANDLER=handler.landingPage --wait
+```
+
+3. Function is ready
+
+```
+curl http://node43-test.default.dev.triggermesh.io
+
+{"statusCode":200,"headers":{"Content-Type":"text/html"},"body":"\n  <html>\n    <style>\n      h1 { color: #73757d; }\n    </style>\n    <body>\n      <h1>Landing Page</h1>\n      <p>Hey Unknown!</p>\n    </body>\n  </html>"}
+```
 
 ### Support
 

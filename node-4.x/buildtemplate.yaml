@@ -38,7 +38,7 @@ spec:
     - |
       cd /workspace/${DIRECTORY}
       cat <<EOF > Dockerfile
-        FROM node:4.3
+        FROM node:4-alpine
         WORKDIR /opt
 
         RUN apk --no-cache add curl \
@@ -53,7 +53,7 @@ spec:
         ENV _HANDLER "${HANDLER}"
 
         COPY . .
-
+        RUN npm install
         ENTRYPOINT ["/opt/aws-custom-runtime"]
       EOF
   - name: export
