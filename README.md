@@ -1,3 +1,5 @@
+![TriggerMesh Knative Lambda Runtime](./triggermeshklr.png "TriggerMesh Knative Lambda Runtime")
+
 ### AWS Lambda buildtemplates
 
 Knative buildtemplate based on [LambCI](https://github.com/lambci/docker-lambda) runtimes. 
