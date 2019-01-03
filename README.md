@@ -36,7 +36,7 @@ To use Python 2.7 runtime simply replace version tag in step 1 and 2 with `pytho
 1. Install node 4.3 buildtemplate
 
 ```
-https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/node-4.x/buildtemplate.yaml
+tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/node-4.x/buildtemplate.yaml
 ```
 
 2. Deploy example function
