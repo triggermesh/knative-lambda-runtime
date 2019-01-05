@@ -1,11 +1,14 @@
 ![TriggerMesh Knative Lambda Runtime](./triggermeshklr.png "TriggerMesh Knative Lambda Runtime")
 
-### AWS Lambda buildtemplates
+Knative Lambda Runtimes (e.g KLR, pronounced _clear_) are Knative [build templates](https://github.com/knative/build-templates) that can be used to run an AWS Lambda function in a Kubernetes cluster installed with Knative.
 
-Knative buildtemplate based on [LambCI](https://github.com/lambci/docker-lambda) runtimes. 
-Function deployment example using [tm](https://github.com/triggermesh/tm) CLI:
+The execution environment where the AWS Lambda function runs is a clone of the AWS Lambda cloud environment thanks to a custom [AWS runtime interface](https://github.com/triggermesh/aws-custom-runtime) and some inspiration from the [LambCI](https://github.com/lambci/docker-lambda) project.
 
-#### Python
+With these templates, you can run your AWS Lambda functions **as is** in a Knative powered Kubernetes cluster.
+
+The examples below use the [tm](https://github.com/triggermesh/tm) CLI to interactive with Knative but one could also use `kubectl`:
+
+### Python
 
 1. Install buildtemplate
 
@@ -31,7 +34,7 @@ curl python-test.default.dev.triggermesh.io
 To use Python 2.7 runtime simply replace version tag in step 1 and 2 with `python-2.7` and `aws-python27-runtime` accordingly.
 
 
-#### Nodejs
+### Nodejs
 
 1. Install node 4.3 buildtemplate
 
