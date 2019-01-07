@@ -45,7 +45,7 @@ spec:
         WORKDIR /go/src/handler
         COPY . .
         RUN if [ -f "Gopkg.toml" ]; then dep ensure; fi
-        RUN go install
+        RUN go get -v && go install
 
         FROM alpine
         WORKDIR /opt
