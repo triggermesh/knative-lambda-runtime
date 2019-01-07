@@ -56,6 +56,10 @@ curl http://node43-test.default.dev.triggermesh.io
 {"statusCode":200,"headers":{"Content-Type":"text/html"},"body":"\n  <html>\n    <style>\n      h1 { color: #73757d; }\n    </style>\n    <body>\n      <h1>Landing Page</h1>\n      <p>Hey Unknown!</p>\n    </body>\n  </html>"}
 ```
 
+Node 10.x supports `async` handlers but existing examples may not work.
+An [example 10.x handler](https://github.com/solsson/serverless-examples/tree/master/aws-node-async-hello) can be tried using
+`tm deploy service node10hello -f https://github.com/solsson/serverless-examples --build-template aws-node10-runtime --build-argument DIRECTORY=aws-node-async-hello --build-argument HANDLER=handler.sayHelloAsync`.
+
 ### Support
 
 We would love your feedback on this tool so don't hesitate to let us know what is wrong and how we could improve it, just file an [issue](https://github.com/triggermesh/knative-lambda-runtime/issues/new)
