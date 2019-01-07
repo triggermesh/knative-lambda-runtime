@@ -1,0 +1,66 @@
+# Copyright 2018 TriggerMesh, Inc
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: build.knative.dev/v1alpha1
+kind: BuildTemplate
+metadata:
+  name: aws-go-runtime
+spec:
+  parameters:
+  - name: IMAGE
+    description: The URI of the image to push, including registry host
+  - name: TAG
+    description: Tag of the image being pushed
+    default: "latest"
+  - name: DIRECTORY
+    description: The subdirectory of the workspace/repo
+    default: ""
+  steps:
+  - name: dockerfile
+    image: gcr.io/kaniko-project/executor@sha256:30ba460a034a8051b3222a32e20cb6049741e58384e3adf8c8987c004e2f2ab9
+    command:
+    - /busybox/sh
+    args:
+    - -c
+    - |
+      cd /workspace/${DIRECTORY}
+      cat <<EOF > Dockerfile
+      FROM golang:alpine
+        RUN apk --no-cache add git \
+        && go get github.com/triggermesh/aws-custom-runtime \
+        && go get github.com/triggermesh/knative-lambda-runtime/go-1.x \
+        && go get github.com/golang/dep/...
+
+        WORKDIR /go/src/handler
+        COPY . .
+        RUN if [ -f "Gopkg.toml" ]; then dep ensure; fi
+        RUN go install
+
+        FROM alpine
+        WORKDIR /opt
+
+        ENV LAMBDA_TASK_ROOT "/opt"
+        ENV _HANDLER "handler"
+
+        COPY --from=0 /go/bin/go-1.x /opt/bootstrap
+        COPY --from=0 /go/bin/ /opt
+
+        ENTRYPOINT ["/opt/aws-custom-runtime"]
+      EOF
+  - name: export
+    image: gcr.io/kaniko-project/executor@sha256:30ba460a034a8051b3222a32e20cb6049741e58384e3adf8c8987c004e2f2ab9
+    args:
+    - --context=/workspace/${DIRECTORY}
+    - --dockerfile=/workspace/${DIRECTORY}/Dockerfile
+    - --destination=${IMAGE}:${TAG}
