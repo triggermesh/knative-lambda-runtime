@@ -85,9 +85,8 @@ tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative
 3. Deploy function
 
 ```
-tm deploy service node-lambda -f . --build-template knative-node10-runtime --wait
+tm deploy service node-lambda -f . --build-template knative-node10-runtime --build-argument HANDLER=handler.sayHelloAsync --wait
 ```
-
 
 ### Go
 
