@@ -15,7 +15,7 @@
 apiVersion: build.knative.dev/v1alpha1
 kind: BuildTemplate
 metadata:
-  name: aws-node10-runtime
+  name: knative-node10-runtime
 spec:
   parameters:
   - name: IMAGE

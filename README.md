@@ -19,7 +19,7 @@ tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative
 2. Deploy [function](https://github.com/serverless/examples/tree/master/aws-python-simple-http-endpoint)
 
 ```
-tm deploy service python-test -f https://github.com/serverless/examples --build-template aws-python37-runtime --build-argument DIRECTORY=aws-python-simple-http-endpoint --build-argument HANDLER=handler.endpoint --wait
+tm deploy service python-test -f https://github.com/serverless/examples --build-template knative-python37-runtime --build-argument DIRECTORY=aws-python-simple-http-endpoint --build-argument HANDLER=handler.endpoint --wait
 ```
 
 3. Execute function via public URL
@@ -31,7 +31,7 @@ curl python-test.default.dev.triggermesh.io
 ```
 
 
-To use Python 2.7 runtime simply replace version tag in step 1 and 2 with `python-2.7` and `aws-python27-runtime` accordingly.
+To use Python 2.7 runtime simply replace version tag in step 1 and 2 with `python-2.7` and `knative-python27-runtime` accordingly.
 
 
 ### Nodejs
@@ -45,7 +45,7 @@ tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative
 2. Deploy example function
 
 ```
-tm deploy service node4-test -f https://github.com/serverless/examples --build-template aws-node4-runtime --build-argument DIRECTORY=aws-node-serve-dynamic-html-via-http-endpoint --build-argument HANDLER=handler.landingPage --wait
+tm deploy service node4-test -f https://github.com/serverless/examples --build-template knative-node4-runtime --build-argument DIRECTORY=aws-node-serve-dynamic-html-via-http-endpoint --build-argument HANDLER=handler.landingPage --wait
 ```
 
 3. Function is ready
@@ -95,7 +95,7 @@ tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative
 3. Deploy function
 
 ```
-tm deploy service go-lambda -f . --build-template aws-go-runtime --wait
+tm deploy service go-lambda -f . --build-template knative-go-runtime --wait
 ```
 
 Done:

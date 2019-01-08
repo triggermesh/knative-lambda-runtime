@@ -15,7 +15,7 @@
 apiVersion: build.knative.dev/v1alpha1
 kind: BuildTemplate
 metadata:
-  name: aws-go-runtime
+  name: knative-go-runtime
 spec:
   parameters:
   - name: IMAGE
