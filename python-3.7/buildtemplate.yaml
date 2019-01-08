@@ -15,7 +15,7 @@
 apiVersion: build.knative.dev/v1alpha1
 kind: BuildTemplate
 metadata:
-  name: aws-python37-runtime
+  name: knative-python37-runtime
 spec:
   parameters:
   - name: IMAGE
