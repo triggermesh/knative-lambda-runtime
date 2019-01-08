@@ -60,6 +60,55 @@ Node 10.x supports `async` handlers but existing examples may not work.
 An [example 10.x handler](https://github.com/solsson/serverless-examples/tree/master/aws-node-async-hello) can be tried using
 `tm deploy service node10hello -f https://github.com/solsson/serverless-examples --build-template aws-node10-runtime --build-argument DIRECTORY=aws-node-async-hello --build-argument HANDLER=handler.sayHelloAsync`.
 
+### Go
+
+1. Prepare function code
+
+```
+mkdir example-lambda-go
+cd example-lambda-go
+cat > main.go <<EOF
+package main
+
+import (
+        "fmt"
+        "context"
+        "github.com/aws/aws-lambda-go/lambda"
+)
+
+type MyEvent struct {
+        Name string \`json:"name"\`
+}
+
+func HandleRequest(ctx context.Context, name MyEvent) (string, error) {
+        return fmt.Sprintf("Hello %s!", name.Name ), nil
+}
+
+func main() {
+        lambda.Start(HandleRequest)
+}
+EOF
+```
+
+2. Install Go buildtemplate
+
+```
+tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/go-1.x/buildtemplate.yaml
+```
+
+3. Deploy function
+
+```
+tm deploy service go-lambda -f . --build-template aws-go-runtime --wait
+```
+
+Done:
+
+```
+curl http://go-lambda.default.dev.triggermesh.io --data '{"Name": "Foo"}'
+"Hello Foo!"
+```
+
 ### Support
 
 We would love your feedback on this tool so don't hesitate to let us know what is wrong and how we could improve it, just file an [issue](https://github.com/triggermesh/knative-lambda-runtime/issues/new)
