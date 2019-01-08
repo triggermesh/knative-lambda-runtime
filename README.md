@@ -70,9 +70,11 @@ async function justWait() {
 
 module.exports.sayHelloAsync = async (event) => {
   await justWait();
-  return "hello";
+  return {hello: event.name};
 };
 EOF
+
+node -e "require('./handler').sayHelloAsync({}).then(h => console.log(h))"
 ```
 
 2. Install node-10.x buildtemplate
@@ -85,6 +87,13 @@ tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative
 
 ```
 tm deploy service node-lambda -f . --build-template knative-node10-runtime --build-argument HANDLER=handler.sayHelloAsync --wait
+```
+
+Done:
+
+```
+curl http://node-lambda.default.dev.triggermesh.io --data '{"name": "Foo"}'
+# {"hello":"Foo"}
 ```
 
 ### Go
