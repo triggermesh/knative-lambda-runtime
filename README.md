@@ -56,9 +56,38 @@ curl http://node43-test.default.dev.triggermesh.io
 {"statusCode":200,"headers":{"Content-Type":"text/html"},"body":"\n  <html>\n    <style>\n      h1 { color: #73757d; }\n    </style>\n    <body>\n      <h1>Landing Page</h1>\n      <p>Hey Unknown!</p>\n    </body>\n  </html>"}
 ```
 
-Node 10.x supports `async` handlers but existing examples may not work.
-An [example 10.x handler](https://github.com/solsson/serverless-examples/tree/master/aws-node-async-hello) can be tried using
-`tm deploy service node10hello -f https://github.com/solsson/serverless-examples --build-template aws-node10-runtime --build-argument DIRECTORY=aws-node-async-hello --build-argument HANDLER=handler.sayHelloAsync`.
+### Node 10 with `asnc` handler
+
+1. Prepare function code
+
+```
+mkdir example-lambda-nodejs
+cd example-lambda-nodejs
+cat > handler.js <<EOF
+async function justWait() {
+  return new Promise((resolve, reject) => setTimeout(resolve, 100));
+}
+
+module.exports.sayHelloAsync = async (event) => {
+  console.log('At', new Date(), 'got', event);
+  await justWait();
+  return "hello";
+};
+EOF
+```
+
+2. Install node-10.x buildtemplate
+
+```
+tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/node-10.x/buildtemplate.yaml
+```
+
+3. Deploy function
+
+```
+tm deploy service node-lambda -f . --build-template aws-node10-runtime --wait
+```
+
 
 ### Go
 
