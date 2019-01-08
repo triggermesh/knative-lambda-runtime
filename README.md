@@ -61,8 +61,8 @@ curl http://node43-test.default.dev.triggermesh.io
 1. Prepare function code
 
 ```
-mkdir lambda
-cd lambda
+mkdir example-lambda-go
+cd example-lambda-go
 cat > main.go <<EOF
 package main
 
