@@ -73,7 +73,7 @@ import (
 )
 
 type MyEvent struct {
-        Name string `json:"name"`
+        Name string \`json:"name"\`
 }
 
 func HandleRequest(ctx context.Context, name MyEvent) (string, error) {
