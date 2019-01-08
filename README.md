@@ -69,7 +69,6 @@ async function justWait() {
 }
 
 module.exports.sayHelloAsync = async (event) => {
-  console.log('At', new Date(), 'got', event);
   await justWait();
   return "hello";
 };
