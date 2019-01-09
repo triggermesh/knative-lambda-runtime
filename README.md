@@ -19,7 +19,11 @@ tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative
 2. Deploy [function](https://github.com/serverless/examples/tree/master/aws-python-simple-http-endpoint)
 
 ```
-tm deploy service python-test -f https://github.com/serverless/examples --build-template knative-python37-runtime --build-argument DIRECTORY=aws-python-simple-http-endpoint --build-argument HANDLER=handler.endpoint --wait
+tm deploy service python-test -f https://github.com/serverless/examples \
+                              --build-template knative-python37-runtime \
+                              --build-argument DIRECTORY=aws-python-simple-http-endpoint \
+                              --build-argument HANDLER=handler.endpoint \
+                              --wait
 ```
 
 3. Execute function via public URL
@@ -45,7 +49,11 @@ tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative
 2. Deploy example function
 
 ```
-tm deploy service node4-test -f https://github.com/serverless/examples --build-template knative-node4-runtime --build-argument DIRECTORY=aws-node-serve-dynamic-html-via-http-endpoint --build-argument HANDLER=handler.landingPage --wait
+tm deploy service node4-test -f https://github.com/serverless/examples \
+                             --build-template knative-node4-runtime \
+                             --build-argument DIRECTORY=aws-node-serve-dynamic-html-via-http-endpoint \
+                             --build-argument HANDLER=handler.landingPage \
+                             --wait
 ```
 
 3. Function is ready
@@ -86,7 +94,9 @@ tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative
 3. Deploy function
 
 ```
-tm deploy service node-lambda -f . --build-template knative-node10-runtime --build-argument HANDLER=handler.sayHelloAsync --wait
+tm deploy service node-lambda -f . --build-template knative-node10-runtime \
+                                   --build-argument HANDLER=handler.sayHelloAsync \
+                                   --wait
 ```
 
 Done:
