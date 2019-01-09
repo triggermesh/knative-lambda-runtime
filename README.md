@@ -56,7 +56,7 @@ curl http://node43-test.default.dev.triggermesh.io
 {"statusCode":200,"headers":{"Content-Type":"text/html"},"body":"\n  <html>\n    <style>\n      h1 { color: #73757d; }\n    </style>\n    <body>\n      <h1>Landing Page</h1>\n      <p>Hey Unknown!</p>\n    </body>\n  </html>"}
 ```
 
-### Node 10 with `asnc` handler
+### Node 10 with `async` handler
 
 1. Prepare function code
 
