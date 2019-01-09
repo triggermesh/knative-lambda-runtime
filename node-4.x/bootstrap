@@ -1,4 +1,7 @@
 #!/bin/sh
+#
+# Adapted for node from https://docs.aws.amazon.com/lambda/latest/dg/runtimes-walkthrough.html
+#
 
 # Processing
 while true
