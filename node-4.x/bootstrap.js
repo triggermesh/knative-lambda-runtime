@@ -1,3 +1,5 @@
+// Copyright (c) 2018 Amazon. All rights reserved.
+
 'use strict';
 var net = require('net');
 var repl = require('repl');
