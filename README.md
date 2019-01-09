@@ -70,7 +70,7 @@ async function justWait() {
 
 module.exports.sayHelloAsync = async (event) => {
   await justWait();
-  return {hello: event.name};
+  return {hello: event && event.name || "Missing a name property in the event's JSON body"};
 };
 EOF
 
