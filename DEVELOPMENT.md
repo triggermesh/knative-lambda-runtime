@@ -18,3 +18,11 @@ curl http://$(minikube ip):32380 -H 'Host: node-lambda.default.example.com' -d '
 For remote clusters try port-forwarding to your registry. Push to localhost:port doesn't require https.
 However note that with for example Docker for Mac the VM that runs docker might not be able to access the port-forward.
 See for example https://github.com/docker/for-mac/issues/1160.
+
+# Python
+
+```
+docker build -t knative.registry.svc.cluster.local/triggermesh/knative-lambda-runtime-python37:latest python-3.7/
+docker push knative.registry.svc.cluster.local/triggermesh/knative-lambda-runtime-python37:latest
+tm deploy service python-test -f https://github.com/serverless/examples --build-template knative-python37-runtime --build-argument DIRECTORY=aws-python-simple-http-endpoint --build-argument HANDLER=handler.endpoint --build-argument BASEIMAGE_REGISTRY=knative.registry.svc.cluster.local
+```
