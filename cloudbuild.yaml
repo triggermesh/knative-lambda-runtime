@@ -1,0 +1,15 @@
+steps:
+
+- name: 'knative.registry.svc.cluster.local/cloud-builders/docker'
+  args: ['build', '-t', 'knative.registry.svc.cluster.local/$PROJECT_ID/knative-lambda-runtime-node10:$REVISION_ID', '-t', 'knative.registry.svc.cluster.local/$PROJECT_ID/knative-lambda-runtime-node10:latest', './node-10.x/']
+- name: 'knative.registry.svc.cluster.local/cloud-builders/docker'
+  args: ['push', 'knative.registry.svc.cluster.local/$PROJECT_ID/knative-lambda-runtime-node10:$REVISION_ID']
+
+- name: 'knative.registry.svc.cluster.local/cloud-builders/docker'
+  args: ['build', '-t', 'knative.registry.svc.cluster.local/$PROJECT_ID/knative-lambda-runtime-python37:$REVISION_ID', '-t', 'knative.registry.svc.cluster.local/$PROJECT_ID/knative-lambda-runtime-python37:latest', './node-10.x/']
+- name: 'knative.registry.svc.cluster.local/cloud-builders/docker'
+  args: ['push', 'knative.registry.svc.cluster.local/$PROJECT_ID/knative-lambda-runtime-python37:$REVISION_ID']
+
+images:
+- 'knative.registry.svc.cluster.local/$PROJECT_ID/knative-lambda-runtime-node10'
+- 'knative.registry.svc.cluster.local/$PROJECT_ID/knative-lambda-runtime-python37'
