@@ -6,7 +6,7 @@ The execution environment where the AWS Lambda function runs is a clone of the A
 
 With these templates, you can run your AWS Lambda functions **as is** in a Knative powered Kubernetes cluster.
 
-The examples below use the [tm](https://github.com/triggermesh/tm) CLI to interactive with Knative but one could also use `kubectl`:
+The examples below use the [tm](https://github.com/triggermesh/tm/releases/tag/v0.0.7) CLI to interactive with Knative but one could also use `kubectl`:
 
 ### Python
 
