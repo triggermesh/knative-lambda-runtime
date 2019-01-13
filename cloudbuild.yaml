@@ -1,0 +1,21 @@
+## Build python37 runtime
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-python37:$REVISION_ID', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-python37:latest', '-f' ,'./python-3.7/Dockerfile', '.' ]
+
+## Build python27 runtime
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-python27:$REVISION_ID', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-python27:latest', '-f' ,'./python-2.7/Dockerfile', '.' ]
+
+## Build node4 runtime
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-node4:$REVISION_ID', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-node4:latest', '-f' ,'./node-4.x/Dockerfile', '.' ]
+
+## Build node10 runtime
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-node10:$REVISION_ID', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-node10:latest', '-f' ,'./node-10.x/Dockerfile', '.' ]
+
+images: 
+  - 'gcr.io/$PROJECT_ID/knative-lambda-python37'
+  - 'gcr.io/$PROJECT_ID/knative-lambda-python27'
+  - 'gcr.io/$PROJECT_ID/knative-lambda-node4'
+  - 'gcr.io/$PROJECT_ID/knative-lambda-node10'
