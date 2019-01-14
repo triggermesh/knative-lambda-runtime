@@ -155,6 +155,27 @@ curl http://go-lambda.default.dev.triggermesh.io --data '{"Name": "Foo"}'
 "Hello Foo!"
 ```
 
+### Ruby
+
+1. Install Ruby 2.5 buildtemplate
+
+```
+tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/ruby-2.5/buildtemplate.yaml
+```
+
+2. Deploy example function
+
+```
+tm deploy service ruby-lambda -f https://github.com/serverless/examples --build-argument DIRECTORY=aws-ruby-simple-http-endpoint --build-argument HANDLER=handler.endpoint --build-template knative-ruby25-runtime --wait
+```
+
+3. Function is ready
+
+```
+curl http://ruby-test-25.default.dev.triggermesh.io
+{"statusCode":200,"body":"{\"date\":\"2019-01-14 19:10:29 +0000\"}"}
+```
+
 ### Support
 
 We would love your feedback on this tool so don't hesitate to let us know what is wrong and how we could improve it, just file an [issue](https://github.com/triggermesh/knative-lambda-runtime/issues/new)
