@@ -1,5 +1,6 @@
 FROM lambci/lambda:ruby2.5
 FROM ruby:2.5-alpine
+WORKDIR /opt
         
 RUN apk --no-cache add curl \
     && API_VERSION=$(curl -sI https://github.com/triggermesh/aws-custom-runtime/releases/latest | grep "Location:" | awk -F "/" '{print $NF}' | tr -d "\r") \

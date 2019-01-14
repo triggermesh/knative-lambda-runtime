@@ -42,7 +42,7 @@ spec:
     - |
       cd /workspace/${DIRECTORY}
       cat <<EOF > Dockerfile
-        FROM ${BASEIMAGE_REGISTRY}/triggermesh/knative-lambda-runtime-ruby25:${BASEIMAGE_TAG}
+        FROM ${BASEIMAGE_REGISTRY}/triggermesh/knative-lambda-ruby25:${BASEIMAGE_TAG}
         ENV _HANDLER "${HANDLER}"
 
         COPY . .
