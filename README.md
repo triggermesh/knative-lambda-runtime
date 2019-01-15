@@ -110,10 +110,18 @@ curl http://node-lambda.default.dev.triggermesh.io --data '{"name": "Foo"}'
 
 1. Prepare function code
 
+You will create a `main.go` file in the `example-lambda-go` directory.
+
+Create the directory and get into it:
+
 ```
 mkdir example-lambda-go
 cd example-lambda-go
-cat > main.go <<EOF
+```
+
+Copy and Paste the following into a `main.go` file:
+
+```
 package main
 
 import (
@@ -123,7 +131,7 @@ import (
 )
 
 type MyEvent struct {
-        Name string \`json:"name"\`
+        Name string `json:"name"`
 }
 
 func HandleRequest(ctx context.Context, name MyEvent) (string, error) {
