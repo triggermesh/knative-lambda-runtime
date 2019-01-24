@@ -8,6 +8,16 @@ With these templates, you can run your AWS Lambda functions **as is** in a Knati
 
 The examples below use the [tm](https://github.com/triggermesh/tm/releases/tag/v0.0.7) CLI to interact with Knative but one could also use `kubectl`:
 
+### Docker registry for builds
+
+The examples below produce a new Docker image each time,
+that combines the runtime with the source.
+While these images can be considered temporary,
+bilds must push to a Docker registry in order for Kubernetes to be able to launch the container.
+In the `tm` commands below we use [Knative Local Registry](https://github.com/triggermesh/knative-local-registry)
+so that builds can run without registry authentication.
+To use your own registry, replace `--registry-host` with secrets according to [tm docs](https://github.com/triggermesh/tm#docker-registry).
+
 ### Python
 
 1. Install buildtemplate
@@ -96,6 +106,7 @@ tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative
 ```
 tm deploy service node-lambda -f . --build-template knative-node10-runtime \
                                    --build-argument HANDLER=handler.sayHelloAsync \
+                                   --registry-host knative.registry.svc.cluster.local \
                                    --wait
 ```
 
