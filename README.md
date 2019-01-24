@@ -33,6 +33,7 @@ tm deploy service python-test -f https://github.com/serverless/examples \
                               --build-template knative-python37-runtime \
                               --build-argument DIRECTORY=aws-python-simple-http-endpoint \
                               --build-argument HANDLER=handler.endpoint \
+                              --registry-host knative.registry.svc.cluster.local \
                               --wait
 ```
 
@@ -63,6 +64,7 @@ tm deploy service node4-test -f https://github.com/serverless/examples \
                              --build-template knative-node4-runtime \
                              --build-argument DIRECTORY=aws-node-serve-dynamic-html-via-http-endpoint \
                              --build-argument HANDLER=handler.landingPage \
+                             --registry-host knative.registry.svc.cluster.local \
                              --wait
 ```
 
