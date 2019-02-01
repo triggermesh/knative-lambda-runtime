@@ -13,8 +13,8 @@ The examples below use the [tm](https://github.com/triggermesh/tm/releases/tag/v
 To combine the runtime with your source, the examples below produce a new Docker image each time.
 While these images can be considered temporary,
 builds must be pushed to a Docker registry in order for Kubernetes to be able to pull.
-By default `tm` uses [Knative Local Registry](https://github.com/triggermesh/knative-local-registry)
-- equivalent to adding `--registry-host knative.registry.svc.cluster.local` to the commands below -
+By default `tm` uses [Knative Local Registry](https://github.com/triggermesh/knative-local-registry),
+equivalent to adding `--registry-host knative.registry.svc.cluster.local` to the commands below,
 so that builds can run without registry authentication.
 To override, set `--registry-host` and secrets according to [tm docs](https://github.com/triggermesh/tm#docker-registry).
 
