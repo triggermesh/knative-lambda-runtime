@@ -16,7 +16,7 @@ builds must be pushed to a Docker registry in order for Kubernetes to be able to
 By default `tm` uses [Knative Local Registry](https://github.com/triggermesh/knative-local-registry)
 - equivalent to adding `--registry-host knative.registry.svc.cluster.local` to the commands below -
 so that builds can run without registry authentication.
-To use your own registry, replace `--registry-host` with secrets according to [tm docs](https://github.com/triggermesh/tm#docker-registry).
+To override, set `--registry-host` and secrets according to [tm docs](https://github.com/triggermesh/tm#docker-registry).
 
 ### Python
 
