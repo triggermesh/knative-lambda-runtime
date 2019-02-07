@@ -1,0 +1,17 @@
+service: serverless-foo
+description: "cron test with KLR"
+
+provider:
+  name: triggermesh
+
+functions:
+  goklr:
+    source: main.go
+    runtime: https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/go-1.x/buildtemplate.yaml 
+    description: "klr go"
+    environment:
+      FUNCTION: go-klr
+    events:
+     - schedule:
+         rate: "*/1 * * * *"
+         data: '{"Name":"sebgoa"}'
