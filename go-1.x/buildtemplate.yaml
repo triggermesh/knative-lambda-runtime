@@ -38,8 +38,8 @@ spec:
       cat <<EOF > Dockerfile
       FROM golang:alpine
         RUN apk --no-cache add git ca-certificates \
-        && go get github.com/tzununbekov/aws-custom-runtime \
-        && go get github.com/tzununbekov/knative-lambda-runtime/go-1.x \
+        && go get github.com/triggermesh/aws-custom-runtime \
+        && go get github.com/triggermesh/knative-lambda-runtime/go-1.x \
         && go get github.com/golang/dep/...
 
         WORKDIR /go/src/handler
