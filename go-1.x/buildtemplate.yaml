@@ -37,7 +37,7 @@ spec:
       cd /workspace/${DIRECTORY}
       cat <<EOF > Dockerfile
       FROM golang:alpine
-        RUN apk --no-cache add git \
+        RUN apk --no-cache add git ca-certificates \
         && go get github.com/triggermesh/aws-custom-runtime \
         && go get github.com/triggermesh/knative-lambda-runtime/go-1.x \
         && go get github.com/golang/dep/...
@@ -53,6 +53,7 @@ spec:
         ENV LAMBDA_TASK_ROOT "/opt"
         ENV _HANDLER "handler"
 
+        COPY --from=0 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
         COPY --from=0 /go/bin/go-1.x /opt/bootstrap
         COPY --from=0 /go/bin/ /opt
 

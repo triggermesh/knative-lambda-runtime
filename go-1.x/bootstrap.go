@@ -42,22 +42,19 @@ func main() {
 	os.Setenv("PATH", os.Getenv("PATH")+":/opt")
 
 	cmd := exec.Command(handler)
-	cmd.Stdout = os.Stderr
-	cmd.Stderr = os.Stderr
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	cmd.Env = append(os.Environ(),
 		"_LAMBDA_SERVER_PORT="+lambdaPort,
 	)
 
-	if err := cmd.Start(); err != nil {
-		sendResponse(apiURL+initErrPath, err.Error())
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		sendResponse(apiURL+initErrPath, fmt.Sprintf("%s:%s\n", output, err))
 		return
 	}
-
 	defer syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
 
 	var conn net.Conn
-	var err error
 	for {
 		if conn, err = net.Dial("tcp", ":"+lambdaPort); err == nil {
 			break
