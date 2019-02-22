@@ -33,20 +33,23 @@ import (
 const (
 	initErrPath = "/2018-06-01/runtime/init/error"
 	invokePath  = "/2018-06-01/runtime/invocation"
-	lambdaPort  = "5432"
 )
+
+var lambdaPort = 5432
 
 func main() {
 	apiURL := "http://" + os.Getenv("AWS_LAMBDA_RUNTIME_API")
 	handler := os.Getenv("_HANDLER")
 	os.Setenv("PATH", os.Getenv("PATH")+":/opt")
 
+	lambdaPort = rpcPortFromEnv()
+
 	cmd := exec.Command(handler)
-	cmd.Stdout = os.Stderr
+	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	cmd.Env = append(os.Environ(),
-		"_LAMBDA_SERVER_PORT="+lambdaPort,
+		fmt.Sprintf("_LAMBDA_SERVER_PORT=%d", lambdaPort),
 	)
 
 	fmt.Println("Starting handler")
@@ -59,7 +62,7 @@ func main() {
 	var conn net.Conn
 	var err error
 	for {
-		if conn, err = net.Dial("tcp", ":"+lambdaPort); err == nil {
+		if conn, err = net.Dial("tcp", fmt.Sprintf(":%d", lambdaPort)); err == nil {
 			break
 		}
 		if oerr, ok := err.(*net.OpError); ok {
@@ -141,4 +144,17 @@ func sendResponse(url, message string) {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+func rpcPortFromEnv() int {
+	index, ok := os.LookupEnv("BOOTSTRAP_INDEX")
+	if !ok {
+		return lambdaPort
+	}
+	i, err := strconv.Atoi(index)
+	if err != nil {
+		fmt.Printf("Can't convert \"BOOTSTRAP_INDEX\" env variable to integer: %s\n", err)
+		return lambdaPort
+	}
+	return lambdaPort + i
 }
