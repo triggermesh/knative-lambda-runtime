@@ -28,7 +28,7 @@ spec:
     default: ""
   - name: SSH_KEY
     description: Name of ssh key file to authenticate in private git repository  
-    default: git-ssh-key
+    default: "git-ssh-key"
   steps:
   - name: dockerfile
     image: gcr.io/kaniko-project/executor@sha256:30ba460a034a8051b3222a32e20cb6049741e58384e3adf8c8987c004e2f2ab9
@@ -49,9 +49,9 @@ spec:
 
         WORKDIR /go/src/handler
         COPY . .
-        RUN if [ -f "$HOME/.ssh/id_$SSH_KEY" ]; then \
+        RUN if [ -f "$HOME/.ssh/id_${SSH_KEY}" ]; then \
             eval "\$(ssh-agent -s)"; \
-            ssh-add $HOME/.ssh/id_$SSH_KEY; \
+            ssh-add $HOME/.ssh/id_${SSH_KEY}; \
         fi \
         && if [ -f "Gopkg.toml" ]; then dep ensure; fi \
         && go get -v \
