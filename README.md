@@ -151,7 +151,6 @@ func HandleRequest(ctx context.Context, name MyEvent) (string, error) {
 func main() {
         lambda.Start(HandleRequest)
 }
-EOF
 ```
 
 2. Install Go buildtemplate
@@ -172,6 +171,16 @@ Done:
 curl http://go-lambda.default.dev.triggermesh.io --data '{"Name": "Foo"}'
 "Hello Foo!"
 ```
+
+#### Dependecies
+
+To have more control over the go project dependecies, KLR runtime will read and "ensure" `Gopkg.toml` file if it's available in the project's root. Without toml file, only `go get` will be executed before build.
+If the project has dependencies stored in a private repository, you can create k8s secret with SSH key that will be used for `git clone` operation:
+
+```
+cat ~/.ssh/id_rsa | tm set git-auth
+```
+where `~/.ssh/id_rsa` is a path to SSH private key associated with your git account
 
 ### Ruby
 
