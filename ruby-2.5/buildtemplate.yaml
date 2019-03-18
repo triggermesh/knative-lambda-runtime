@@ -54,3 +54,9 @@ spec:
     - --context=/workspace/${DIRECTORY}
     - --dockerfile=/workspace/${DIRECTORY}/Dockerfile
     - --destination=${IMAGE}:${TAG}
+    # Workaround not to use default config which requires gcloud credentials 
+    # to pull base image from public gcr registry 
+    # https://groups.google.com/d/msg/kaniko-users/r5yoP_Ejm_c/ExoEXksDBAAJ
+    env:
+    - name: DOCKER_CONFIG
+      value: "/"
