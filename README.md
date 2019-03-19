@@ -22,7 +22,7 @@ To override, set `--registry-secret` according to [tm docs](https://github.com/t
 
 Concurrency in KLR represented by two components: parallel running [bootstrap](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-custom.html) processes per container and Knative [container concurrency](https://github.com/knative/serving/blob/master/docs/spec/spec.md#revision) model. By default [AWS runtime interface](https://github.com/triggermesh/aws-custom-runtime) fires up 8 bootstrap processes (functions, in other words) and allows multiple concurrent requests (`containerConcurrency: 0`) to be handled by each container. Default concurrency configuration can be changed on function deployment or update using `tm deploy service` command parameters:
 
-`--concurrency <N>` - sets Knative service `containerConcurrency` value to 5
+`--concurrency <N>` - sets Knative service `containerConcurrency` value to `N`
 
 `--build-argument INVOKER_COUNT=<N>` - passes number of parallel running functions to AWS lambda runtime
 
