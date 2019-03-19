@@ -6,7 +6,7 @@ The execution environment where the AWS Lambda function runs is a clone of the A
 
 With these templates, you can run your AWS Lambda functions **as is** in a Knative powered Kubernetes cluster.
 
-The examples below use the [tm](https://github.com/triggermesh/tm/releases/tag/v0.0.7) CLI to interact with Knative but one could also use `kubectl`:
+The examples below use the [tm](https://github.com/triggermesh/tm/releases/latest) CLI to interact with Knative but one could also use `kubectl`:
 
 ### Docker registry for builds
 
@@ -16,9 +16,25 @@ builds must be pushed to a Docker registry in order for Kubernetes to be able to
 By default `tm` uses [Knative Local Registry](https://github.com/triggermesh/knative-local-registry),
 equivalent to adding `--registry-host knative.registry.svc.cluster.local` to the commands below,
 so that builds can run without registry authentication.
-To override, set `--registry-host` and secrets according to [tm docs](https://github.com/triggermesh/tm#docker-registry).
+To override, set `--registry-secret` according to [tm docs](https://github.com/triggermesh/tm#docker-registry).
 
-### Python
+### Concurrency 
+
+Concurrency in KLR represented by two components: parallel running [bootstrap](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-custom.html) processes per container and Knative [container concurrency](https://github.com/knative/serving/blob/master/docs/spec/spec.md#revision) model. By default [AWS runtime interface](https://github.com/triggermesh/aws-custom-runtime) fires up 8 bootstrap processes (functions, in other words) and allows multiple concurrent requests (`containerConcurrency: 0`) to be handled by each container. Default concurrency configuration can be changed on function deployment or update using `tm deploy service` command parameters:
+
+`--concurrency <N>` - sets Knative service `containerConcurrency` value to 5
+
+`--build-argument INVOKER_COUNT=<N>` - passes number of parallel running functions to AWS lambda runtime
+
+Values for these two parameters should be calculated individually for each function and depends on operation characteristics. Knative [autoscaling](https://github.com/knative/docs/blob/master/docs/serving/samples/autoscale-go/README.md) is another important factor that affects service performance, but right now KLR uses default autoscaling configuration.
+
+
+### Examples
+
+NOTE: all examples below work with [Local Registry](https://github.com/triggermesh/knative-local-registry). If you don't have local registry in knative cluster, you can use external registry as discribed in CLI [documentation](https://github.com/triggermesh/tm#docker-registry)
+
+
+#### Python
 
 1. Install buildtemplate
 
@@ -48,7 +64,7 @@ curl python-test.default.dev.triggermesh.io
 To use Python 2.7 runtime simply replace version tag in step 1 and 2 with `python-2.7` and `knative-python27-runtime` accordingly.
 
 
-### Nodejs
+#### Nodejs
 
 1. Install node 4.3 buildtemplate
 
@@ -74,7 +90,7 @@ curl http://node43-test.default.dev.triggermesh.io
 {"statusCode":200,"headers":{"Content-Type":"text/html"},"body":"\n  <html>\n    <style>\n      h1 { color: #73757d; }\n    </style>\n    <body>\n      <h1>Landing Page</h1>\n      <p>Hey Unknown!</p>\n    </body>\n  </html>"}
 ```
 
-### Node 10 with `async` handler
+#### Node 10 with `async` handler
 
 1. Prepare function code
 
@@ -116,7 +132,7 @@ curl http://node-lambda.default.dev.triggermesh.io --data '{"name": "Foo"}'
 # {"hello":"Foo"}
 ```
 
-### Go
+#### Go
 
 1. Prepare function code
 
@@ -172,7 +188,7 @@ curl http://go-lambda.default.dev.triggermesh.io --data '{"Name": "Foo"}'
 "Hello Foo!"
 ```
 
-#### Dependecies
+##### Dependecies
 
 To have more control over the go project dependecies, KLR runtime will read and "ensure" `Gopkg.toml` file if it's available in the project's root. Without toml file, only `go get` will be executed before build.
 If the project has dependencies stored in a private repository, you can create k8s secret with SSH key that will be used for `git clone` operation:
@@ -182,7 +198,7 @@ cat ~/.ssh/id_rsa | tm set git-auth
 ```
 where `~/.ssh/id_rsa` is a path to SSH private key associated with your git account
 
-### Ruby
+#### Ruby
 
 1. Install Ruby 2.5 buildtemplate
 
