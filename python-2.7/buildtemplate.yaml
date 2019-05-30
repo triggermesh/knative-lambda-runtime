@@ -43,6 +43,7 @@ spec:
         ENV _HANDLER "${HANDLER}"
 
         COPY . .
+        RUN if [ -f requirements.txt ]; then pip2.7 install -r requirements.txt; fi
 
         ENTRYPOINT ["/opt/aws-custom-runtime"]
       EOF
