@@ -1,4 +1,4 @@
-# Copyright 2018 TriggerMesh, Inc
+# Copyright 2019 TriggerMesh, Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,45 +12,49 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: build.knative.dev/v1alpha1
-kind: BuildTemplate
+apiVersion: tekton.dev/v1alpha1
+kind: Task
 metadata:
-  name: knative-node10-runtime
+  name: knative-python27-runtime
 spec:
-  parameters:
-  - name: IMAGE
-    description: The URI of the image to push, including registry host
-  - name: TAG
-    description: Tag of the image being pushed
-    default: latest
-  - name: DIRECTORY
-    description: The subdirectory of the workspace/repo
-    default: ""
-  - name: HANDLER
-    default: "function.handler"
+  inputs:
+    params:
+    - name: IMAGE
+      description: The URI of the image to push, including registry host
+    - name: DIRECTORY
+      description: The subdirectory of the workspace/repo
+      default: "."
+    - name: HANDLER
+      default: "function.handler"
+    resources:
+    - name: sources
+      targetPath: /workspace
+      type: git
   steps:
   - name: dockerfile
-    image: gcr.io/kaniko-project/executor@sha256:30ba460a034a8051b3222a32e20cb6049741e58384e3adf8c8987c004e2f2ab9
+    image: gcr.io/kaniko-project/executor:debug-v0.8.0
     command:
     - /busybox/sh
     args:
     - -c
     - |
-      cd /workspace/${DIRECTORY}
+      cd /workspace/workspace
       cat <<EOF > Dockerfile
-        FROM gcr.io/triggermesh/knative-lambda-node10
-        ENV _HANDLER "${HANDLER}"
+        FROM gcr.io/triggermesh/knative-lambda-python27
+
+        ENV _HANDLER "${inputs.params.HANDLER}"
 
         COPY . .
-        RUN npm install
+        RUN if [ -f requirements.txt ]; then pip2.7 install -r requirements.txt; fi
+
         ENTRYPOINT ["/opt/aws-custom-runtime"]
       EOF
   - name: export
-    image: gcr.io/kaniko-project/executor@sha256:30ba460a034a8051b3222a32e20cb6049741e58384e3adf8c8987c004e2f2ab9
+    image: gcr.io/kaniko-project/executor:debug-v0.8.0
     args:
-    - --context=/workspace/${DIRECTORY}
-    - --dockerfile=/workspace/${DIRECTORY}/Dockerfile
-    - --destination=${IMAGE}:${TAG}
+    - --dockerfile=Dockerfile
+    - --context=/workspace/workspace
+    - --destination=${inputs.params.IMAGE}
     # Workaround not to use default config which requires gcloud credentials 
     # to pull base image from public gcr registry 
     # https://groups.google.com/d/msg/kaniko-users/r5yoP_Ejm_c/ExoEXksDBAAJ

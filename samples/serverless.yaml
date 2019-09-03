@@ -7,7 +7,7 @@ provider:
 functions:
   goklr:
     source: main.go
-    runtime: https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/go-1.x/buildtemplate.yaml 
+    runtime: https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/go-1.x/runtime.yaml 
     description: "klr go"
     environment:
       FUNCTION: go-klr
