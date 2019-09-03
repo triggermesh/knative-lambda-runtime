@@ -1,12 +1,12 @@
 ![TriggerMesh Knative Lambda Runtime](./triggermeshklr.png "TriggerMesh Knative Lambda Runtime")
 
-Knative Lambda Runtimes (e.g KLR, pronounced _clear_) are Knative [build templates](https://github.com/knative/build-templates) that can be used to run an AWS Lambda function in a Kubernetes cluster installed with Knative.
+Knative Lambda Runtimes (e.g KLR, pronounced _clear_) are Tekton [Tasks](https://github.com/tektoncd/pipeline/blob/master/docs/tasks.md) that can be used to run an AWS Lambda function in a Kubernetes cluster installed with Knative.
 
 The execution environment where the AWS Lambda function runs is a clone of the AWS Lambda cloud environment thanks to a custom [AWS runtime interface](https://github.com/triggermesh/aws-custom-runtime) and some inspiration from the [LambCI](https://github.com/lambci/docker-lambda) project.
 
 With these templates, you can run your AWS Lambda functions **as is** in a Knative powered Kubernetes cluster.
 
-The examples below use the [tm](https://github.com/triggermesh/tm/releases/latest) CLI to interact with Knative but one could also use `kubectl`:
+The examples below use the [tm](https://github.com/triggermesh/tm/releases/latest) CLI to interact with Knative but one could also use `kubectl`.
 
 ### Docker registry for builds
 
@@ -36,10 +36,10 @@ NOTE: all examples below work with [Local Registry](https://github.com/triggerme
 
 #### Python
 
-1. Install buildtemplate
+1. Install runtime
 
 ```
-tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/python-3.7/buildtemplate.yaml
+tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/python-3.7/runtime.yaml
 ```
 
 2. Deploy [function](https://github.com/serverless/examples/tree/master/aws-python-simple-http-endpoint)
@@ -66,10 +66,10 @@ To use Python 2.7 runtime simply replace version tag in step 1 and 2 with `pytho
 
 #### Nodejs
 
-1. Install node 4.3 buildtemplate
+1. Install node 4.3 runtime
 
 ```
-tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/node-4.x/buildtemplate.yaml
+tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/node-4.x/runtime.yaml
 ```
 
 2. Deploy example function
@@ -111,10 +111,10 @@ EOF
 node -e "require('./handler').sayHelloAsync({}).then(h => console.log(h))"
 ```
 
-2. Install node-10.x buildtemplate
+2. Install node-10.x runtime
 
 ```
-tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/node-10.x/buildtemplate.yaml
+tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/node-10.x/runtime.yaml
 ```
 
 3. Deploy function
@@ -169,10 +169,10 @@ func main() {
 }
 ```
 
-2. Install Go buildtemplate
+2. Install Go runtime
 
 ```
-tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/go-1.x/buildtemplate.yaml
+tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/go-1.x/runtime.yaml
 ```
 
 3. Deploy function
@@ -200,10 +200,10 @@ where `~/.ssh/id_rsa` is a path to SSH private key associated with your git acco
 
 #### Ruby
 
-1. Install Ruby 2.5 buildtemplate
+1. Install Ruby 2.5 runtime
 
 ```
-tm deploy buildtemplate -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/ruby-2.5/buildtemplate.yaml
+tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/ruby-2.5/runtime.yaml
 ```
 
 2. Deploy example function
