@@ -38,7 +38,7 @@ spec:
     args:
     - -c
     - |
-      cd /workspace/workspace
+      cd /workspace/workspace/${inputs.params.DIRECTORY}
       cat <<EOF > Dockerfile
         FROM gcr.io/triggermesh/knative-lambda-python27
 
@@ -53,7 +53,7 @@ spec:
     image: gcr.io/kaniko-project/executor:debug-v0.8.0
     args:
     - --dockerfile=Dockerfile
-    - --context=/workspace/workspace
+    - --context=/workspace/workspace/${inputs.params.DIRECTORY}
     - --destination=${inputs.params.IMAGE}
     # Workaround not to use default config which requires gcloud credentials 
     # to pull base image from public gcr registry 

@@ -39,7 +39,7 @@ spec:
     args:
     - -c
     - |
-      cd /workspace/workspace
+      cd /workspace/workspace/${inputs.params.DIRECTORY}
       cat <<EOF > Dockerfile
         FROM golang:alpine
         # Skip known public key check to be able to pull from private repositories 
@@ -70,7 +70,7 @@ spec:
   - name: export
     image: gcr.io/kaniko-project/executor:debug-v0.8.0
     args:
-    - --context=/workspace/workspace
+    - --context=/workspace/workspace/${inputs.params.DIRECTORY}
     - --dockerfile=Dockerfile
     - --destination=${inputs.params.IMAGE}
     # Workaround not to use default config which requires gcloud credentials 
