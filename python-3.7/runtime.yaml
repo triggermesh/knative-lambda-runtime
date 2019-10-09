@@ -38,11 +38,11 @@ spec:
     args:
     - -c
     - |
-      cd /workspace/workspace/${inputs.params.DIRECTORY}
+      cd /workspace/workspace/$(inputs.params.DIRECTORY)
       cat <<EOF > Dockerfile
         FROM gcr.io/triggermesh/knative-lambda-python37
 
-        ENV _HANDLER "${inputs.params.HANDLER}"
+        ENV _HANDLER "$(inputs.params.HANDLER)"
 
         COPY . .
         RUN if [ -f requirements.txt ]; then pip3.7 install -r requirements.txt ;fi
@@ -52,9 +52,9 @@ spec:
   - name: export
     image: gcr.io/kaniko-project/executor:debug-v0.8.0
     args:
-    - --context=/workspace/workspace/${inputs.params.DIRECTORY}
+    - --context=/workspace/workspace/$(inputs.params.DIRECTORY)
     - --dockerfile=Dockerfile
-    - --destination=${inputs.params.IMAGE}
+    - --destination=$(inputs.params.IMAGE)
     # Workaround not to use default config which requires gcloud credentials 
     # to pull base image from public gcr registry 
     # https://groups.google.com/d/msg/kaniko-users/r5yoP_Ejm_c/ExoEXksDBAAJ

@@ -39,7 +39,7 @@ spec:
     args:
     - -c
     - |
-      cd /workspace/workspace/${inputs.params.DIRECTORY}
+      cd /workspace/workspace/$(inputs.params.DIRECTORY)
       cat <<EOF > Dockerfile
         FROM golang:alpine
         # Skip known public key check to be able to pull from private repositories 
@@ -50,9 +50,9 @@ spec:
         && go get github.com/golang/dep/...
         WORKDIR /go/src/handler
         COPY . .
-        RUN if [ -f "$HOME/.ssh/id_${inputs.params.SSH_KEY}" ]; then \
+        RUN if [ -f "$HOME/.ssh/id_$(inputs.params.SSH_KEY)" ]; then \
             eval "\$(ssh-agent -s)"; \
-            ssh-add $HOME/.ssh/id_${inputs.params.SSH_KEY}; \
+            ssh-add $HOME/.ssh/id_$(inputs.params.SSH_KEY); \
         fi \
         && if [ -f "Gopkg.toml" ]; then dep ensure; fi \
         && go get -v \
@@ -70,9 +70,9 @@ spec:
   - name: export
     image: gcr.io/kaniko-project/executor:debug-v0.8.0
     args:
-    - --context=/workspace/workspace/${inputs.params.DIRECTORY}
+    - --context=/workspace/workspace/$(inputs.params.DIRECTORY)
     - --dockerfile=Dockerfile
-    - --destination=${inputs.params.IMAGE}
+    - --destination=$(inputs.params.IMAGE)
     # Workaround not to use default config which requires gcloud credentials 
     # to pull base image from public gcr registry 
     # https://groups.google.com/d/msg/kaniko-users/r5yoP_Ejm_c/ExoEXksDBAAJ
