@@ -1,7 +1,8 @@
 FROM python:3.7-slim-stretch
 WORKDIR /opt
 
-RUN apk --no-cache add curl \
+RUN apt-get update \
+    && apt-get install -y curl \
     && API_VERSION=$(curl -sI https://github.com/triggermesh/aws-custom-runtime/releases/latest | grep "Location:" | awk -F "/" '{print $NF}' | tr -d "\r") \
     && RUNTIME_VERSION=$(curl -sI https://github.com/triggermesh/knative-lambda-runtime/releases/latest | grep "Location:" | awk -F "/" '{print $NF}' | tr -d "\r") \
     && curl -sL https://github.com/triggermesh/aws-custom-runtime/releases/download/${API_VERSION}/aws-custom-runtime > aws-custom-runtime \
