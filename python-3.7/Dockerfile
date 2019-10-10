@@ -1,4 +1,4 @@
-FROM python:alpine3.7
+FROM python:3.7-slim-stretch
 WORKDIR /opt
 
 RUN apk --no-cache add curl \
