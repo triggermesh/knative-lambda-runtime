@@ -1,0 +1,65 @@
+# Copyright 2019 TriggerMesh, Inc
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: knative-java8-runtime
+spec:
+  inputs:
+    params:
+    - name: IMAGE
+      description: Where to store resulting image
+    - name: DIRECTORY
+      description: The subdirectory of the workspace/repo
+      default: "."
+    - name: HANDLER
+      default: "org.lambci.lambda.ExampleHandler"
+    resources:
+    - name: sources
+      targetPath: /workspace
+      type: git
+  steps:
+  - name: dockerfile
+    image: gcr.io/kaniko-project/executor:debug-v0.8.0
+    command:
+    - /busybox/sh
+    args:
+    - -c
+    - |
+      cd /workspace/workspace/$(inputs.params.DIRECTORY)
+      cat <<EOF > Dockerfile
+        FROM gradle:6.0
+        WORKDIR /app
+        COPY . .
+        RUN gradle build
+
+
+        FROM gcr.io/triggermesh/knative-lambda-java8
+        COPY --from=0 /app/build/docker /var/task
+
+        CMD ["$(inputs.params.HANDLER)"]
+      EOF
+  - name: export
+    image: gcr.io/kaniko-project/executor:debug-v0.8.0
+    args:
+    - --context=/workspace/workspace/$(inputs.params.DIRECTORY)
+    - --dockerfile=Dockerfile
+    - --destination=$(inputs.params.IMAGE)
+    # Workaround not to use default config which requires gcloud credentials 
+    # to pull base image from public gcr registry 
+    # https://groups.google.com/d/msg/kaniko-users/r5yoP_Ejm_c/ExoEXksDBAAJ
+    env:
+    - name: DOCKER_CONFIG
+      value: "/"

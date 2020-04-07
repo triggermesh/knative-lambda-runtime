@@ -19,9 +19,14 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-ruby25:$REVISION_ID', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-ruby25:latest', '-f' ,'./ruby-2.5/Dockerfile', '.' ]
 
+## Build java8 runtime
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-java8:$REVISION_ID', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-java8:latest', '-f' ,'./java8/Dockerfile', '.' ]
+
 images: 
   - 'gcr.io/$PROJECT_ID/knative-lambda-python37'
   - 'gcr.io/$PROJECT_ID/knative-lambda-python27'
   - 'gcr.io/$PROJECT_ID/knative-lambda-node4'
   - 'gcr.io/$PROJECT_ID/knative-lambda-node10'
   - 'gcr.io/$PROJECT_ID/knative-lambda-ruby25'
+  - 'gcr.io/$PROJECT_ID/knative-lambda-java8'
