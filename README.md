@@ -219,6 +219,46 @@ curl http://ruby-test-25.default.dev.triggermesh.io
 {"statusCode":200,"body":"{\"date\":\"2019-01-14 19:10:29 +0000\"}"}
 ```
 
+#### Java8
+
+1. Clone serverless [examples](https://github.com/serverless/examples) repository, change directory to `aws-java-simple-http-endpoint`, edit `serverless.yaml`:
+
+```
+service: aws-java-sample
+description: Triggermesh Java8 sample
+provider:
+  name: triggermesh
+functions:
+  java-function:
+    source: ../aws-java-simple-http-endpoint
+    runtime: https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/java8/runtime.yaml
+    buildargs:
+    - HANDLER=com.serverless.Handler
+    environment:
+      EVENT_TYPE: "API_GATEWAY"
+```
+
+2. Remove incompatible leftovers from `build.gradle` file:
+
+```
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.2.1'
+}
+```
+
+3. Deploy:
+
+```
+tm deploy
+```
+
+Function is ready:
+
+```
+curl http://aws-java-sample-java-function.default.dev.triggermesh.io -d '{"event":"foo"}'
+{"message":"Hello, the current time is Tue Apr 07 13:59:17 GMT 2020"}
+```
+
 ### Support
 
 We would love your feedback on this tool so don't hesitate to let us know what is wrong and how we could improve it, just file an [issue](https://github.com/triggermesh/knative-lambda-runtime/issues/new)

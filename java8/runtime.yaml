@@ -47,7 +47,8 @@ spec:
 
 
         FROM gcr.io/triggermesh/knative-lambda-java8
-        COPY --from=0 /app/build/docker /var/task
+        COPY --from=0 /app/build/distributions/*.zip /var/task
+        RUN unzip /var/task/*.zip
 
         CMD ["$(inputs.params.HANDLER)"]
       EOF
