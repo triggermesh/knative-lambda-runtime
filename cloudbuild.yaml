@@ -21,7 +21,7 @@ steps:
 
 ## Build java8 runtime
 - name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-java8:$REVISION_ID', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-java8:latest', '-f' ,'./java8/Dockerfile', '.' ]
+  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-java8:$REVISION_ID', '-t', 'gcr.io/$PROJECT_ID/knative-lambda-java8:latest', 'java8' ]
 
 images: 
   - 'gcr.io/$PROJECT_ID/knative-lambda-python37'
