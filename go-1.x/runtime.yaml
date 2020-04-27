@@ -17,17 +17,17 @@ kind: Task
 metadata:
   name: knative-go-runtime
 spec:
-  inputs:
-    params:
-    - name: IMAGE
-      description: Where to store resulting image
-    - name: SSH_KEY
-      description: SSH key 
-      default: "placeholder"
-    - name: DIRECTORY
-      description: The subdirectory of the workspace/repo
-      default: "."
-    resources:
+  params:
+  - name: IMAGE
+    description: Where to store resulting image
+  - name: SSH_KEY
+    description: SSH key 
+    default: "placeholder"
+  - name: DIRECTORY
+    description: The subdirectory of the workspace/repo
+    default: "."
+  resources:
+    inputs:
     - name: sources
       targetPath: /workspace
       type: git

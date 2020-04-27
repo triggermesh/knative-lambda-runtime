@@ -17,16 +17,16 @@ kind: Task
 metadata:
   name: knative-java8-runtime
 spec:
-  inputs:
-    params:
-    - name: IMAGE
-      description: Where to store resulting image
-    - name: DIRECTORY
-      description: The subdirectory of the workspace/repo
-      default: "."
-    - name: HANDLER
-      default: "org.lambci.lambda.ExampleHandler"
-    resources:
+  params:
+  - name: IMAGE
+    description: Where to store resulting image
+  - name: DIRECTORY
+    description: The subdirectory of the workspace/repo
+    default: "."
+  - name: HANDLER
+    default: "org.lambci.lambda.ExampleHandler"
+  resources:
+    inputs:
     - name: sources
       targetPath: /workspace
       type: git

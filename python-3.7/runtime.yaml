@@ -17,16 +17,16 @@ kind: Task
 metadata:
   name: knative-python37-runtime
 spec:
-  inputs:
-    params:
-    - name: IMAGE
-      description: The URI of the image to push, including registry host
-    - name: DIRECTORY
-      description: The subdirectory of the workspace/repo
-      default: "."
-    - name: HANDLER
-      default: "function.handler"
-    resources:
+  params:
+  - name: IMAGE
+    description: The URI of the image to push, including registry host
+  - name: DIRECTORY
+    description: The subdirectory of the workspace/repo
+    default: "."
+  - name: HANDLER
+    default: "function.handler"
+  resources:
+    inputs:
     - name: sources
       targetPath: /workspace
       type: git
