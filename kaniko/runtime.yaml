@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: kaniko
+spec:
+  params:
+  - name: IMAGE
+    description: The URI of the image to push, including registry host
+    default: ""
+  - name: DIRECTORY
+    description: The subdirectory of the workspace/repo
+    default: ""
+  - name: DOCKERFILE
+    description: File name to build docker image
+    default: Dockerfile
+  resources:
+    inputs:
+    - name: sources
+      targetPath: /workspace
+      type: git
+  steps:
+  - name: build-and-push
+    image: gcr.io/kaniko-project/executor:v0.8.0
+    args:
+    - --context=/workspace/workspace/$(inputs.params.DIRECTORY)
+    - --dockerfile=/workspace/workspace/$(inputs.params.DIRECTORY)/$(inputs.params.DOCKERFILE)
+    - --destination=$(inputs.params.IMAGE)
