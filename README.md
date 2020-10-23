@@ -20,14 +20,13 @@ To override, set `--registry-secret` according to [tm docs](https://github.com/t
 
 ### Concurrency 
 
-Concurrency in KLR represented by two components: parallel running [bootstrap](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-custom.html) processes per container and Knative [container concurrency](https://github.com/knative/serving/blob/master/docs/spec/spec.md#revision) model. By default [AWS runtime interface](https://github.com/triggermesh/aws-custom-runtime) fires up 8 bootstrap processes (functions, in other words) and allows multiple concurrent requests (`containerConcurrency: 0`) to be handled by each container. Default concurrency configuration can be changed on function deployment or update using `tm deploy service` command parameters:
+Concurrency in KLR represented by two components: parallel running [bootstrap](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-custom.html) processes per container and Knative [container concurrency](https://github.com/knative/serving/blob/master/docs/spec/spec.md#revision) model. By default [AWS runtime interface](https://github.com/triggermesh/aws-custom-runtime) fires up 4 bootstrap processes (functions, in other words) and allows multiple concurrent requests (`containerConcurrency: 0`) to be handled by each container. Default concurrency configuration can be changed on function deployment or update using `tm deploy service` command parameters:
 
 `--concurrency <N>` - sets Knative service `containerConcurrency` value to `N`
 
 `--build-argument INVOKER_COUNT=<N>` - passes number of parallel running functions to AWS lambda runtime
 
 Values for these two parameters should be calculated individually for each function and depends on operation characteristics. Knative [autoscaling](https://github.com/knative/docs/blob/master/docs/serving/samples/autoscale-go/README.md) is another important factor that affects service performance, but right now KLR uses default autoscaling configuration.
-
 
 ### Examples
 
@@ -257,6 +256,74 @@ Function is ready:
 ```
 curl http://aws-java-sample-java-function.default.dev.triggermesh.io -d '{"event":"foo"}'
 {"message":"Hello, the current time is Tue Apr 07 13:59:17 GMT 2020"}
+```
+
+### Run in Docker 
+
+For cases in which the use of additional components (tm CLI, Tekton, Knative, k8s) is undesirable, it is possible to build a KLR function as a standalone Docker container and run it in any environment. To do this, you should extract the Dockerfile from the runtime you are interested in, put it in the directory with your function, update the handler variable, and build the container. Here are Dockerfile definitions for all runtimes:
+
+- [go](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/go-1.x/runtime.yaml#L44-L68)
+- [java](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/java8/runtime.yaml#L43-L53)
+- [node-10](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/node-10.x/runtime.yaml#L43-L48)
+- [node-4](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/node-4.x/runtime.yaml#L43-L48)
+- [python-2](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/python-2.7/runtime.yaml#L43-L50)
+- [python-3](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/python-3.7/runtime.yaml#L43-L50)
+- [ruby-2](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/ruby-2.5/runtime.yaml#L43-L47)
+
+
+Let's build a Python 3.7 function as an example:
+
+1. Create directory and save your function code there:
+
+```
+  mkdir python
+  cd python
+  cat > handler.py <<EOF
+import json
+import datetime
+def endpoint(event, context):
+  current_time = datetime.datetime.now().time()
+  body = {
+      "message": "Hello, the current time is " + str(current_time)
+  }
+  response = {
+      "statusCode": 200,
+      "body": json.dumps(body)
+  }
+  return response
+EOF
+```
+
+2. Extract the runtime's [Dockerfile](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/python-3.7/runtime.yaml#L43-L50), store it in the same directory, and update the `_HANDLER` variable:
+
+```
+  cat > Dockerfile <<EOF
+  FROM gcr.io/triggermesh/knative-lambda-python37
+  ENV _HANDLER handler.endpoint
+  COPY . .
+  RUN if [ -f requirements.txt ]; then pip3.7 install -r requirements.txt ;fi
+  ENTRYPOINT ["/opt/aws-custom-runtime"]
+EOF
+```
+
+The `_HANDLER` variable in most cases consists of the filename without the file extension, and the function name.
+
+3. Build, run, test:
+
+```
+  docker build -t python-klr-image .
+  docker run -d --rm --name python-klr-container python-klr-image
+  # following command will work if you use Docker bridge network and you have jq tool 
+  # otherwise, you should get the container address manually  
+  curl $(docker inspect python-klr-container | jq .[].NetworkSettings.Networks.bridge.IPAddress -r):8080
+```
+  
+  The response will contain a JSON document with the current time.
+
+4. Cleanup:
+
+```
+  docker stop python-klr-container
 ```
 
 ### Support
