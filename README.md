@@ -326,6 +326,22 @@ The `_HANDLER` variable in most cases consists of the filename without the file 
   docker stop python-klr-container
 ```
 
+The image can be pushed to the container registry and used to create Knative Service:
+
+```
+kubectl apply -f - <<EOF
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: python-klr-service
+spec:
+  template:
+    spec:
+      containers:
+        - image: <python-klr-image>
+EOF
+```
+
 ### Support
 
 We would love your feedback on this tool so don't hesitate to let us know what is wrong and how we could improve it, just file an [issue](https://github.com/triggermesh/knative-lambda-runtime/issues/new)
