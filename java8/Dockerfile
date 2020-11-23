@@ -4,7 +4,7 @@ COPY runtime /var/runtime
 
 RUN apk update && apk add --no-cache libc6-compat curl \
     && API_VERSION=$(curl -sI https://github.com/triggermesh/aws-custom-runtime/releases/latest | grep -i "Location:" | awk -F "/" '{print $NF}' | tr -d "\r") \
-    && curl -sL https://github.com/triggermesh/aws-custom-runtime/releases/download/${API_VERSION}/aws-custom-runtime > /var/runtime/mockserver \
+    && curl -sL https://github.com/triggermesh/aws-custom-runtime/releases/download/${API_VERSION}/aws-custom-runtime-linux-amd64 > /var/runtime/mockserver \
     && chmod +x /var/runtime/mockserver
 
 ENV LD_LIBRARY_PATH /lib64:/usr/lib64:/var/runtime:/var/runtime/lib:/var/task:/var/task/lib:/opt/lib
