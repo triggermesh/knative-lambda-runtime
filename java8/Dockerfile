@@ -1,11 +1,16 @@
+FROM alpine:3 as downloader
+
+RUN apk --no-cache add curl \
+ && DOWNLOAD_URL=$(curl -sSf https://api.github.com/repos/triggermesh/aws-custom-runtime/releases/latest | grep "browser_download_url.*-linux-amd64" | cut -d: -f 2,3 | tr -d \") \
+ && curl -sSfL ${DOWNLOAD_URL} -o /opt/aws-custom-runtime \
+ && chmod +x /opt/aws-custom-runtime
+
 FROM openjdk:8-jre-alpine
 
-COPY runtime /var/runtime
+RUN apk add --no-cache libc6-compat
 
-RUN apk update && apk add --no-cache libc6-compat curl \
-    && API_VERSION=$(curl -sSfI https://github.com/triggermesh/aws-custom-runtime/releases/latest | grep -i "Location:" | awk -F "/" '{print $NF}' | tr -d "\r") \
-    && curl -sSfL https://github.com/triggermesh/aws-custom-runtime/releases/download/${API_VERSION}/aws-custom-runtime-linux-amd64 > /var/runtime/mockserver \
-    && chmod +x /var/runtime/mockserver
+COPY runtime /var/runtime
+COPY --from=downloader /opt/aws-custom-runtime /var/runtime/mockserver
 
 ENV LD_LIBRARY_PATH /lib64:/usr/lib64:/var/runtime:/var/runtime/lib:/var/task:/var/task/lib:/opt/lib
 ENV LAMBDA_RUNTIME_DIR /var/runtime

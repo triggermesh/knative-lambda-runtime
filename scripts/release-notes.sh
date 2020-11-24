@@ -31,7 +31,7 @@ RELEASE_ASSETS_TABLE=$(
   echo -n "|"; for runtime in ${RUNTIMES}; do echo -n "--|"; done ; echo
   echo -n "|"
   for runtime in ${RUNTIMES}; do
-    echo -n " [container](https://gcr.io/triggermesh/knative-lambda-$(echo "${runtime}" | sed -n -e "s/\([[:alnum:]]*\)\(-\)*\([0-9]*\)\(\.\)*\([0-9]*\)\(\.\)*\([0-9]*\).*/\1\3\5\7/p"):${RELEASE})"
+    echo -n " [container](https://gcr.io/triggermesh/knative-lambda-${runtime}:${RELEASE})"
     echo -n " |"
   done
   echo
