@@ -18,7 +18,7 @@ equivalent to adding `--registry-host knative.registry.svc.cluster.local` to the
 so that builds can run without registry authentication.
 To override, set `--registry-secret` according to [tm docs](https://github.com/triggermesh/tm#docker-registry).
 
-### Concurrency 
+### Concurrency
 
 Concurrency in KLR represented by two components: parallel running [bootstrap](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-custom.html) processes per container and Knative [container concurrency](https://github.com/knative/serving/blob/master/docs/spec/spec.md#revision) model. By default [AWS runtime interface](https://github.com/triggermesh/aws-custom-runtime) fires up 4 bootstrap processes (functions, in other words) and allows multiple concurrent requests (`containerConcurrency: 0`) to be handled by each container. Default concurrency configuration can be changed on function deployment or update using `tm deploy service` command parameters:
 
@@ -38,7 +38,7 @@ NOTE: all examples below work with [Local Registry](https://github.com/triggerme
 1. Install runtime
 
 ```
-tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/python-3.7/runtime.yaml
+tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/python37/runtime.yaml
 ```
 
 2. Deploy [function](https://github.com/serverless/examples/tree/master/aws-python-simple-http-endpoint)
@@ -60,7 +60,7 @@ curl python-test.default.dev.triggermesh.io
 ```
 
 
-To use Python 2.7 runtime simply replace version tag in step 1 and 2 with `python-2.7` and `knative-python27-runtime` accordingly.
+To use Python 2.7 runtime simply replace version tag in step 1 and 2 with `python27` and `knative-python27-runtime` accordingly.
 
 
 #### Nodejs
@@ -68,7 +68,7 @@ To use Python 2.7 runtime simply replace version tag in step 1 and 2 with `pytho
 1. Install node 4.3 runtime
 
 ```
-tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/node-4.x/runtime.yaml
+tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/node4/runtime.yaml
 ```
 
 2. Deploy example function
@@ -110,10 +110,10 @@ EOF
 node -e "require('./handler').sayHelloAsync({}).then(h => console.log(h))"
 ```
 
-2. Install node-10.x runtime
+2. Install node10 runtime
 
 ```
-tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/node-10.x/runtime.yaml
+tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/node10/runtime.yaml
 ```
 
 3. Deploy function
@@ -171,7 +171,7 @@ func main() {
 2. Install Go runtime
 
 ```
-tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/go-1.x/runtime.yaml
+tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/go/runtime.yaml
 ```
 
 3. Deploy function
@@ -202,7 +202,7 @@ where `~/.ssh/id_rsa` is a path to SSH private key associated with your git acco
 1. Install Ruby 2.5 runtime
 
 ```
-tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/ruby-2.5/runtime.yaml
+tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/ruby25/runtime.yaml
 ```
 
 2. Deploy example function
@@ -258,18 +258,17 @@ curl http://aws-java-sample-java-function.default.dev.triggermesh.io -d '{"event
 {"message":"Hello, the current time is Tue Apr 07 13:59:17 GMT 2020"}
 ```
 
-### Run in Docker 
+### Run in Docker
 
 For cases in which the use of additional components (tm CLI, Tekton, Knative, k8s) is undesirable, it is possible to build a KLR function as a standalone Docker container and run it in any environment. To do this, you should extract the Dockerfile from the runtime you are interested in, put it in the directory with your function, update the handler variable, and build the container. Here are Dockerfile definitions for all runtimes:
 
-- [go](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/go-1.x/runtime.yaml#L44-L68)
-- [java](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/java8/runtime.yaml#L43-L53)
-- [node-10](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/node-10.x/runtime.yaml#L43-L48)
-- [node-4](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/node-4.x/runtime.yaml#L43-L48)
-- [python-2](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/python-2.7/runtime.yaml#L43-L50)
-- [python-3](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/python-3.7/runtime.yaml#L43-L50)
-- [ruby-2](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/ruby-2.5/runtime.yaml#L43-L47)
-
+- [go](https://github.com/triggermesh/knative-lambda-runtime/blob/master/go/runtime.yaml#L44-L68)
+- [java](https://github.com/triggermesh/knative-lambda-runtime/blob/master/java8/runtime.yaml#L43-L53)
+- [node-10](https://github.com/triggermesh/knative-lambda-runtime/blob/master/node10/runtime.yaml#L43-L48)
+- [node-4](https://github.com/triggermesh/knative-lambda-runtime/blob/master/node4/runtime.yaml#L43-L48)
+- [python-2](https://github.com/triggermesh/knative-lambda-runtime/blob/master/python27/runtime.yaml#L43-L50)
+- [python-3](https://github.com/triggermesh/knative-lambda-runtime/blob/master/python37/runtime.yaml#L43-L50)
+- [ruby-2](https://github.com/triggermesh/knative-lambda-runtime/blob/master/ruby25/runtime.yaml#L43-L47)
 
 Let's build a Python 3.7 function as an example:
 
@@ -294,7 +293,7 @@ def endpoint(event, context):
 EOF
 ```
 
-2. Extract the runtime's [Dockerfile](https://github.com/triggermesh/knative-lambda-runtime/blob/9a74ce1ac03d56d233cfc7a46d84f2c5e5f2685a/python-3.7/runtime.yaml#L43-L50), store it in the same directory, and update the `_HANDLER` variable:
+2. Extract the runtime's [Dockerfile](https://github.com/triggermesh/knative-lambda-runtime/blob/master/python37/runtime.yaml#L43-L50), store it in the same directory, and update the `_HANDLER` variable:
 
 ```
   cat > Dockerfile <<EOF
@@ -313,11 +312,11 @@ The `_HANDLER` variable in most cases consists of the filename without the file 
 ```
   docker build -t python-klr-image .
   docker run -d --rm --name python-klr-container python-klr-image
-  # following command will work if you use Docker bridge network and you have jq tool 
-  # otherwise, you should get the container address manually  
+  # following command will work if you use Docker bridge network and you have jq tool
+  # otherwise, you should get the container address manually
   curl $(docker inspect python-klr-container | jq .[].NetworkSettings.Networks.bridge.IPAddress -r):8080
 ```
-  
+
   The response will contain a JSON document with the current time.
 
 4. Cleanup:

@@ -21,7 +21,7 @@ spec:
   - name: IMAGE
     description: Where to store resulting image
   - name: SSH_KEY
-    description: SSH key 
+    description: SSH key
     default: "placeholder"
   - name: DIRECTORY
     description: The subdirectory of the workspace/repo
@@ -42,11 +42,11 @@ spec:
       cd /workspace/workspace/$(inputs.params.DIRECTORY)
       cat <<EOF > Dockerfile
         FROM golang:alpine
-        # Skip known public key check to be able to pull from private repositories 
+        # Skip known public key check to be able to pull from private repositories
         ENV GIT_SSH_COMMAND "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
         RUN apk --no-cache add git ca-certificates openssh \
         && go get github.com/triggermesh/aws-custom-runtime \
-        && go get github.com/triggermesh/knative-lambda-runtime/go-1.x \
+        && go get github.com/triggermesh/knative-lambda-runtime/go \
         && go get github.com/golang/dep/...
         WORKDIR /go/src/handler
         COPY . .
@@ -63,7 +63,7 @@ spec:
         ENV LAMBDA_TASK_ROOT "/opt"
         ENV _HANDLER "handler"
         COPY --from=0 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-        COPY --from=0 /go/bin/go-1.x /opt/bootstrap
+        COPY --from=0 /go/bin/go /opt/bootstrap
         COPY --from=0 /go/bin/ /opt
         ENTRYPOINT ["/opt/aws-custom-runtime"]
       EOF
@@ -73,8 +73,8 @@ spec:
     - --context=/workspace/workspace/$(inputs.params.DIRECTORY)
     - --dockerfile=Dockerfile
     - --destination=$(inputs.params.IMAGE)
-    # Workaround not to use default config which requires gcloud credentials 
-    # to pull base image from public gcr registry 
+    # Workaround not to use default config which requires gcloud credentials
+    # to pull base image from public gcr registry
     # https://groups.google.com/d/msg/kaniko-users/r5yoP_Ejm_c/ExoEXksDBAAJ
     env:
     - name: DOCKER_CONFIG
