@@ -48,6 +48,7 @@ spec:
         && go get github.com/triggermesh/aws-custom-runtime \
         && go get github.com/triggermesh/knative-lambda-runtime/go \
         && go get github.com/golang/dep/...
+        RUN mv /go/bin/go /go/bin/bootstrap
         WORKDIR /go/src/handler
         COPY . .
         RUN if [ -f "$HOME/.ssh/id_$(inputs.params.SSH_KEY)" ]; then \
@@ -63,7 +64,6 @@ spec:
         ENV LAMBDA_TASK_ROOT "/opt"
         ENV _HANDLER "handler"
         COPY --from=0 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-        COPY --from=0 /go/bin/go /opt/bootstrap
         COPY --from=0 /go/bin/ /opt
         ENTRYPOINT ["/opt/aws-custom-runtime"]
       EOF
