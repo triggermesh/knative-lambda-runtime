@@ -61,6 +61,7 @@ class LambdaRuntimeClient(object):
             invoked_function_arn=headers["Lambda-Runtime-Invoked-Function-Arn"],
             deadline_time_in_ms=int(headers["Lambda-Runtime-Deadline-Ms"]),
             client_context=headers["Lambda-Runtime-Client-Context"],
+            cloudevents_context=headers["Lambda-Runtime-Cloudevents-Context"],
             cognito_identity=headers["Lambda-Runtime-Cognito-Identity"],
             event_body=response_body
         )
