@@ -103,6 +103,10 @@ async function nextInvocation() {
     context.clientContext = JSON.parse(res.headers['lambda-runtime-client-context'])
   }
 
+  if (res.headers['lambda-runtime-cloudevents-context']) {
+    context.ce = JSON.parse(res.headers['lambda-runtime-cloudevents-context'])
+  }
+
   if (res.headers['lambda-runtime-cognito-identity']) {
     context.identity = JSON.parse(res.headers['lambda-runtime-cognito-identity'])
   }
