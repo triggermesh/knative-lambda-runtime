@@ -134,16 +134,19 @@ def to_json(obj):
     return json.dumps(obj, default=decimal_serializer)
 
 
-def handle_event_request(lambda_runtime_client, request_handler, invoke_id, event_body, client_context_json, cognito_identity_json, invoked_function_arn, epoch_deadline_time_in_ms):
+def handle_event_request(lambda_runtime_client, request_handler, invoke_id, event_body, client_context_json, cloudevents_context_json, cognito_identity_json, invoked_function_arn, epoch_deadline_time_in_ms):
     error_result = None
     try:
         client_context = None
         if client_context_json:
             client_context = try_or_raise(lambda: json.loads(client_context_json), "Unable to parse client context json")
+        cloudevents_context = None
+        if cloudevents_context_json:
+            cloudevents_context = try_or_raise(lambda: json.loads(cloudevents_context_json), "Unable to parse cloudevents context json")
         cognito_identity = None
         if cognito_identity_json:
             cognito_identity = try_or_raise(lambda: json.loads(cognito_identity_json), "Unable to parse cognito identity json")
-        context = LambdaContext(invoke_id, client_context, cognito_identity, epoch_deadline_time_in_ms, invoked_function_arn)
+        context = LambdaContext(invoke_id, client_context, cloudevents_context, cognito_identity, epoch_deadline_time_in_ms, invoked_function_arn)
         json_input = try_or_raise(lambda: json.loads(event_body.decode()), "Unable to parse input as json")
         result = request_handler(json_input, context)
         result = try_or_raise(lambda: to_json(result), "An error occurred during JSON serialization of response")
@@ -220,7 +223,7 @@ def set_obj_from_dict(obj, _dict, fields=None):
 
 
 class LambdaContext(object):
-    def __init__(self, invoke_id, client_context, cognito_identity, epoch_deadline_time_in_ms, invoked_function_arn=None):
+    def __init__(self, invoke_id, client_context, cloudevents_context, cognito_identity, epoch_deadline_time_in_ms, invoked_function_arn=None):
         self.aws_request_id = invoke_id
         self.log_group_name = os.environ.get('AWS_LAMBDA_LOG_GROUP_NAME')
         self.log_stream_name = os.environ.get('AWS_LAMBDA_LOG_STREAM_NAME')
@@ -228,6 +231,7 @@ class LambdaContext(object):
         self.memory_limit_in_mb = os.environ.get('AWS_LAMBDA_FUNCTION_MEMORY_SIZE')
         self.function_version = os.environ.get('AWS_LAMBDA_FUNCTION_VERSION')
         self.invoked_function_arn = invoked_function_arn
+        self.ce = cloudevents_context
 
         self.client_context = make_obj_from_dict(ClientContext, client_context)
         if self.client_context is not None:
@@ -398,6 +402,7 @@ def main():
                              event_request.invoke_id,
                              event_request.event_body,
                              event_request.client_context,
+                             event_request.cloudevents_context,
                              event_request.cognito_identity,
                              event_request.invoked_function_arn,
                              event_request.deadline_time_in_ms)
