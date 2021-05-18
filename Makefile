@@ -24,9 +24,9 @@ $(IMAGES): %.image:
 CLOUDBUILD_TEST = $(foreach r,$(RUNTIMES),$(r).cloudbuild-test)
 cloudbuild-test: $(CLOUDBUILD_TEST) ## Test container image build with Google Cloud Build
 $(CLOUDBUILD_TEST): %.cloudbuild-test:
-	gcloud builds submit $* --config cloudbuild.yaml --substitutions _RUNTIME=knative-lambda-$*,COMMIT_SHA=${IMAGE_SHA},_KANIKO_IMAGE_TAG=_
+	gcloud builds submit $* --config cloudbuild.yaml --substitutions _RUNTIME=knative-lambda-$*,COMMIT_SHA=${IMAGE_SHA},_KANIKO_USE_BUILD_CACHE=false,_KANIKO_IMAGE_TAG=_
 
 CLOUDBUILD = $(foreach r,$(RUNTIMES),$(r).cloudbuild)
 cloudbuild: $(CLOUDBUILD) ## Build and publish image to GCR
 $(CLOUDBUILD): %.cloudbuild:
-	gcloud builds submit $* --config cloudbuild.yaml --substitutions _RUNTIME=knative-lambda-$*,COMMIT_SHA=${IMAGE_SHA},_KANIKO_IMAGE_TAG=${IMAGE_TAG}
+	gcloud builds submit $* --config cloudbuild.yaml --substitutions _RUNTIME=knative-lambda-$*,COMMIT_SHA=${IMAGE_SHA},_KANIKO_USE_BUILD_CACHE=false,_KANIKO_IMAGE_TAG=${IMAGE_TAG}
