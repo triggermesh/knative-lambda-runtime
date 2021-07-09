@@ -46,8 +46,7 @@ spec:
         ENV GIT_SSH_COMMAND "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
         RUN apk --no-cache add git ca-certificates openssh \
         && go get github.com/triggermesh/aws-custom-runtime \
-        && go get github.com/triggermesh/knative-lambda-runtime/go \
-        && go get github.com/golang/dep/...
+        && go get github.com/triggermesh/knative-lambda-runtime/go
         RUN mv /go/bin/go /go/bin/bootstrap
         WORKDIR /go/src/handler
         COPY . .
@@ -55,9 +54,11 @@ spec:
             eval "\$(ssh-agent -s)"; \
             ssh-add $HOME/.ssh/id_$(inputs.params.SSH_KEY); \
         fi \
-        && if [ -f "Gopkg.toml" ]; then dep ensure; fi \
-        && go get -v \
-        && go install
+        && if [ ! -f "go.mod" ]; then \
+             go mod init handler; \
+           fi \
+        && go get -d -v \
+        && go build -o handler
 
         FROM alpine
         WORKDIR /opt
@@ -65,6 +66,7 @@ spec:
         ENV _HANDLER "handler"
         COPY --from=0 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
         COPY --from=0 /go/bin/ /opt
+        COPY --from=0 /go/src/handler/handler /opt
         ENTRYPOINT ["/opt/aws-custom-runtime"]
       EOF
   - name: export
