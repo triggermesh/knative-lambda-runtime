@@ -38,7 +38,7 @@ NOTE: all examples below work with [Local Registry](https://github.com/triggerme
 1. Install runtime
 
 ```
-tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/python37/runtime.yaml
+tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/main/python37/runtime.yaml
 ```
 
 2. Deploy [function](https://github.com/serverless/examples/tree/master/aws-python-simple-http-endpoint)
@@ -68,7 +68,7 @@ To use Python 2.7 runtime simply replace version tag in step 1 and 2 with `pytho
 1. Install node 4.3 runtime
 
 ```
-tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/node4/runtime.yaml
+tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/main/node4/runtime.yaml
 ```
 
 2. Deploy example function
@@ -113,7 +113,7 @@ node -e "require('./handler').sayHelloAsync({}).then(h => console.log(h))"
 2. Install node10 runtime
 
 ```
-tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/node10/runtime.yaml
+tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/main/node10/runtime.yaml
 ```
 
 3. Deploy function
@@ -171,7 +171,7 @@ func main() {
 2. Install Go runtime
 
 ```
-tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/go/runtime.yaml
+tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/main/go/runtime.yaml
 ```
 
 3. Deploy function
@@ -202,7 +202,7 @@ where `~/.ssh/id_rsa` is a path to SSH private key associated with your git acco
 1. Install Ruby 2.5 runtime
 
 ```
-tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/ruby25/runtime.yaml
+tm deploy task -f https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/main/ruby25/runtime.yaml
 ```
 
 2. Deploy example function
@@ -230,7 +230,7 @@ provider:
 functions:
   java-function:
     source: ../aws-java-simple-http-endpoint
-    runtime: https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/master/java8/runtime.yaml
+    runtime: https://raw.githubusercontent.com/triggermesh/knative-lambda-runtime/main/java8/runtime.yaml
     buildargs:
     - HANDLER=com.serverless.Handler
     environment:
@@ -262,13 +262,13 @@ curl http://aws-java-sample-java-function.default.dev.triggermesh.io -d '{"event
 
 For cases in which the use of additional components (tm CLI, Tekton, Knative, k8s) is undesirable, it is possible to build a KLR function as a standalone Docker container and run it in any environment. To do this, you should extract the Dockerfile from the runtime you are interested in, put it in the directory with your function, update the handler variable, and build the container. Here are Dockerfile definitions for all runtimes:
 
-- [go](https://github.com/triggermesh/knative-lambda-runtime/blob/master/go/runtime.yaml#L44-L68)
-- [java](https://github.com/triggermesh/knative-lambda-runtime/blob/master/java8/runtime.yaml#L43-L53)
-- [node-10](https://github.com/triggermesh/knative-lambda-runtime/blob/master/node10/runtime.yaml#L43-L48)
-- [node-4](https://github.com/triggermesh/knative-lambda-runtime/blob/master/node4/runtime.yaml#L43-L48)
-- [python-2](https://github.com/triggermesh/knative-lambda-runtime/blob/master/python27/runtime.yaml#L43-L50)
-- [python-3](https://github.com/triggermesh/knative-lambda-runtime/blob/master/python37/runtime.yaml#L43-L50)
-- [ruby-2](https://github.com/triggermesh/knative-lambda-runtime/blob/master/ruby25/runtime.yaml#L43-L47)
+- [go](https://github.com/triggermesh/knative-lambda-runtime/blob/main/go/runtime.yaml#L44-L68)
+- [java](https://github.com/triggermesh/knative-lambda-runtime/blob/main/java8/runtime.yaml#L43-L53)
+- [node-10](https://github.com/triggermesh/knative-lambda-runtime/blob/main/node10/runtime.yaml#L43-L48)
+- [node-4](https://github.com/triggermesh/knative-lambda-runtime/blob/main/node4/runtime.yaml#L43-L48)
+- [python-2](https://github.com/triggermesh/knative-lambda-runtime/blob/main/python27/runtime.yaml#L43-L50)
+- [python-3](https://github.com/triggermesh/knative-lambda-runtime/blob/main/python37/runtime.yaml#L43-L50)
+- [ruby-2](https://github.com/triggermesh/knative-lambda-runtime/blob/main/ruby25/runtime.yaml#L43-L47)
 
 Let's build a Python 3.7 function as an example:
 
