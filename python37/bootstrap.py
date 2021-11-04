@@ -149,7 +149,8 @@ def handle_event_request(lambda_runtime_client, request_handler, invoke_id, even
         context = LambdaContext(invoke_id, client_context, cloudevents_context, cognito_identity, epoch_deadline_time_in_ms, invoked_function_arn)
         json_input = try_or_raise(lambda: json.loads(event_body.decode()), "Unable to parse input as json")
         result = request_handler(json_input, context)
-        result = try_or_raise(lambda: to_json(result), "An error occurred during JSON serialization of response")
+        if result is not None:
+            result = try_or_raise(lambda: to_json(result), "An error occurred during JSON serialization of response")
     except FaultException as e:
         error_result = make_error(e.msg, None, None)
         error_result = to_json(error_result)
