@@ -15,7 +15,7 @@ ENV LAMBDA_TASK_ROOT "/opt"
 
 COPY --from=downloader /opt/aws-custom-runtime /opt/
 COPY --from=lambda /var/runtime/lib /opt
-COPY lambda_context.rb /opt/
+COPY lambda_context.rb lambda_handler.rb /opt/
 
 RUN mv /opt/runtime.rb /opt/bootstrap
 RUN sed -i /opt/lambda_server.rb -e 's|http://127.0.0.1:9001/2018-06-01|http://127.0.0.1/2018-06-01|'
