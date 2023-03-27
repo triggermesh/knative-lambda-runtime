@@ -6,10 +6,9 @@ BASE_DIR          ?= $(CURDIR)
 
 DOCKER            ?= docker
 IMAGE_REPO        ?= gcr.io/triggermesh
-IMAGE_TAG         ?= latest
-IMAGE_SHA         ?= $(shell git rev-parse HEAD)
+IMAGE_TAG         ?= $(shell git rev-parse HEAD)
 
-.PHONY: help images cloudbuild-test cloudbuild
+.PHONY: help images
 
 all: images
 
@@ -19,14 +18,4 @@ help: ## Display this help
 IMAGES = $(foreach r,$(RUNTIMES),$(r).image)
 images: $(IMAGES) ## Build the Docker images
 $(IMAGES): %.image:
-	docker build -t $(IMAGE_REPO)/knative-lambda-$* $*
-
-CLOUDBUILD_TEST = $(foreach r,$(RUNTIMES),$(r).cloudbuild-test)
-cloudbuild-test: $(CLOUDBUILD_TEST) ## Test container image build with Google Cloud Build
-$(CLOUDBUILD_TEST): %.cloudbuild-test:
-	gcloud builds submit $* --config cloudbuild.yaml --substitutions _RUNTIME=knative-lambda-$*,COMMIT_SHA=${IMAGE_SHA},_KANIKO_USE_BUILD_CACHE=false,_KANIKO_IMAGE_TAG=_
-
-CLOUDBUILD = $(foreach r,$(RUNTIMES),$(r).cloudbuild)
-cloudbuild: $(CLOUDBUILD) ## Build and publish image to GCR
-$(CLOUDBUILD): %.cloudbuild:
-	gcloud builds submit $* --config cloudbuild.yaml --substitutions _RUNTIME=knative-lambda-$*,COMMIT_SHA=${IMAGE_SHA},_KANIKO_USE_BUILD_CACHE=false,_KANIKO_IMAGE_TAG=${IMAGE_TAG}
+	docker build -t $(IMAGE_REPO)/knative-lambda-$*:${IMAGE_TAG} $*
