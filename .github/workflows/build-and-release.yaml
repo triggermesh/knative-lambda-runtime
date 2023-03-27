@@ -1,0 +1,86 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+
+jobs:
+  publish-images:
+    name: Build and publish image
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - runtime: java8
+        - runtime: node10
+        - runtime: node4
+        - runtime: python27
+        - runtime: python37
+        - runtime: ruby25
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to GCR
+      uses: docker/login-action@v2
+      with:
+        registry: gcr.io
+        username: _json_key
+        password: ${{ secrets.GCLOUD_SERVICEACCOUNT_KEY }}
+      if: github.event_name != 'pull_request'
+
+    - name: Docker metadata
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: gcr.io/triggermesh/knative-lambda-${{ matrix.runtime }}
+        tags: |
+          type=semver,pattern={{raw}}
+          type=sha,prefix=,suffix=,format=long
+
+    - name: Build and push image
+      uses: docker/build-push-action@v4
+      with:
+        provenance: false
+        context: ${{ matrix.runtime }}
+        file: ${{ matrix.runtime }}/Dockerfile
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+
+  create-release:
+    name: Create Release
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    needs: publish-images
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Preparing Release Notes
+      run: |
+        ./scripts/release-notes.sh ${GITHUB_REF_NAME} > release-notes.md
+
+    - name: Creating Release
+      uses: ncipollo/release-action@v1
+      with:
+        bodyFile: "release-notes.md"
