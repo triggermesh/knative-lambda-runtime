@@ -1,6 +1,6 @@
 REPO               = knative-lambda-runtime
 REPO_DESC          = TriggerMesh Knative Lambda Runtime
-RUNTIMES           = java8 node10 node4 python27 python37 ruby25
+RUNTIMES           = java8 node10 node4 node18 python27 python37 python310 ruby25 ruby32
 
 BASE_DIR          ?= $(CURDIR)
 
