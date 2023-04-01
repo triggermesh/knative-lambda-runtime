@@ -21,11 +21,14 @@ jobs:
       matrix:
         include:
         - runtime: java8
-        - runtime: node10
         - runtime: node4
+        - runtime: node10
+        - runtime: node18
         - runtime: python27
         - runtime: python37
+        - runtime: python310
         - runtime: ruby25
+        - runtime: ruby32
 
     steps:
     - name: Checkout
