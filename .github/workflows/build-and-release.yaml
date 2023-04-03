@@ -65,6 +65,47 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
+  update-manifests:
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    name: Update TriggerMesh Manifests
+    runs-on: ubuntu-latest
+    needs: publish-images
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Checkout triggermesh/triggermesh
+      uses: actions/checkout@v3
+      with:
+        path: 'tm-triggermesh'
+        ref: 'main'
+        repository: 'triggermesh/triggermesh'
+        token: ${{ secrets.TM_TRIGGERMESH_TOKEN }}
+
+    - name: Prepare updates
+      working-directory: tm-triggermesh
+      run: |
+        RUNTIMES=$(sed -n -e "s/^\(RUNTIMES[[:space:]]*=[[:space:]]*\)\(.*\)$/\2/p" ../Makefile)
+        echo $RUNTIMES
+        for runtime in ${RUNTIMES}; do
+          sed -i config/500-controller.yaml -e "s|gcr.io/triggermesh/knative-lambda-${runtime##*/}:.*|gcr.io/triggermesh/knative-lambda-${runtime##*/}:"${GITHUB_REF_NAME}"|g"
+        done
+
+        git --no-pager diff
+
+    - name: Commit and push changes
+      working-directory: tm-triggermesh
+      run: |
+        git add -A
+        git status --porcelain
+        if [[ $(git status --porcelain | wc -l) -gt 0 ]]; then
+          git config --global user.name 'TriggerMesh Bot'
+          git config --global user.email 'bot@triggermesh.com'
+          git commit -m "Update function runtime to release '${GITHUB_REF_NAME}'"
+          git push
+        fi
+
   create-release:
     name: Create Release
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
