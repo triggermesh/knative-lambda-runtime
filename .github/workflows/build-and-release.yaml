@@ -50,7 +50,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v4
       with:
-        images: gcr.io/triggermesh/sameer/knative-lambda-${{ matrix.runtime }}
+        images: gcr.io/triggermesh/knative-lambda-${{ matrix.runtime }}
         tags: |
           type=semver,pattern={{raw}}
           type=sha,prefix=,suffix=,format=long
