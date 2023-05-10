@@ -1,3 +1,8 @@
+**Note**: Tekton pipelines and [tm](https://github.com/triggermesh/tm) CLI are no longer supported as a part of TriggerMesh distribution. `tm`-based KLR examples below are not guaranteed to work properly on the latest versions of Knative or Tekton.
+The latest KLR versions are maintained as a base for TriggerMesh [Function](https://docs.triggermesh.io/1.24/transformation/functions/) objects.
+
+___
+
 ![TriggerMesh Knative Lambda Runtime](./triggermeshklr.png "TriggerMesh Knative Lambda Runtime")
 
 Knative Lambda Runtimes (e.g KLR, pronounced _clear_) are Tekton [Tasks](https://github.com/tektoncd/pipeline/blob/master/docs/tasks.md) that can be used to run an AWS Lambda function in a Kubernetes cluster installed with Knative.
